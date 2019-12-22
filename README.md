@@ -9,7 +9,7 @@ Collection of basic auto tests
 
 To do:
 
-- expand scripting
+- data collecting
 - make use of existing 3rd party test suites to run extensive testings
 - run stress test and power cycle n-times
 - support custom test board https://forum.armbian.com/topic/10841-the-testing-thread
