@@ -4,7 +4,7 @@ Collection of basic auto tests
 
 1. Connects to host
 2. Changes password and creates username
-3. Run iper3 test on wlan0
+3. Run iper3 test on wlan0 if defined
 4. Run stress test and reboots n-times
 
 To do:
