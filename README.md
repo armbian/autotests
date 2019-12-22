@@ -1,2 +1,7 @@
 # autotests
-Basic scripts for automated testings
+
+Collection of basic auto tests
+
+Dependencies:
+
+	apt install expect sshpass
