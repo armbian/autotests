@@ -1,5 +1,18 @@
 #!/bin/bash
 
+function get_keys()
+{
+
+	local GET_KEYS=$(expect -c "
+        spawn ssh ${USER_ROOT}@${HOST}
+        set timeout 3
+        expect \"Are you sure you want to continue connecting (yes/no)?\"
+        send \"yes\r\"
+	expect eof
+        ")
+
+}
+
 function armbian-first-login()
 {
 	# clean keys
@@ -9,8 +22,6 @@ function armbian-first-login()
 	MAKE_USER=$(expect -c "
 	spawn ssh ${USER_ROOT}@${HOST}
 	set timeout 3
-	expect \"Are you sure you want to continue connecting (yes/no)?\"
-	send \"yes\r\"
 	expect \"password:\"
 	send \"1234\r\"
 	expect \"Current password:\"
