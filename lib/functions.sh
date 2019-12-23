@@ -17,7 +17,7 @@ function armbian-first-login()
 {
 	# clean keys
 	ssh-keygen -f "/root/.ssh/known_hosts" -R ${HOST} > /dev/null 2>&1
-
+	get_keys
 	# pass user creation to expect
 	MAKE_USER=$(expect -c "
 	spawn ssh ${USER_ROOT}@${HOST}

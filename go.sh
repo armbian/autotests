@@ -22,7 +22,7 @@ get_keys
 
 sshpass -p 1234 ssh ${USER_ROOT}@${HOST} "ls" &>/dev/null
 # if password is still default, change passwd and create new user
-[[ $? -eq 0 ]] && armbian-first-login
+[[ $? -eq 1 ]] && armbian-first-login
 
 x=1
 while [ $x -le ${PASSES} ]
@@ -34,10 +34,10 @@ while ! ping -c1 $HOST &>/dev/null; do echo "Ping Fail - `date`"; done ; echo "H
 		check_wlan
 	fi
 
-	echo "Stressing $HOSTNAME"
+	echo "Stressing $HOST"
 	sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${HOST} "stress --cpu 8 --io 4 --vm 2 --vm-bytes 128M --timeout 60s"
 
-	echo "Rebooting $HOSTNAME"
+	echo "Rebooting $HOST"
 	sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${HOST} "reboot"
 	sleep 20
 	x=$(( $x + 1 ))
