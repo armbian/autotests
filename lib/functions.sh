@@ -10,18 +10,17 @@ function get_keys()
         send \"yes\r\"
 	expect eof
         ")
-
+	echo $GET_KEYS
 }
 
 function armbian-first-login()
 {
 	# clean keys
-	ssh-keygen -f "/root/.ssh/known_hosts" -R ${HOST} > /dev/null 2>&1
 	get_keys
 	# pass user creation to expect
 	MAKE_USER=$(expect -c "
 	spawn ssh ${USER_ROOT}@${HOST}
-	set timeout 3
+	set timeout 10
 	expect \"password:\"
 	send \"1234\r\"
 	expect \"Current password:\"
@@ -36,19 +35,19 @@ function armbian-first-login()
 	send \"${PASS_NORMAL}\r\"
 	expect \"Retype new password:\"
 	send \"${PASS_NORMAL}\r\"
-	expect \"Full Name []:\"
+	expect \"Name\"
 	send \"${NAME_NORMAL}\r\"
-	expect \"Room Number []:\"
+	expect \"Room Number\"
 	send \"${ROOM_NORMAL}\r\"
-	expect \"Work Phone []:\"
+	expect \"Work Phone\"
 	send \"${WORKPHONE_NORMAL}\r\"
-	expect \"Home Phone []:\"
+	expect \"Home Phone\"
 	send \"${HOMEPHONE_NORMAL}\r\"
-	expect \"Other []:\"
+	expect \"Other\"
 	send \"${OTHER_NORMAL}\r\"
-	expect \"Is the information correct? [Y/n]\"
+	expect \"information correct\"
 	send \"Y\r\"
-	expect eof
+	#expect eof
 	")
 	# Disable user creation: send \"\x03\"
 

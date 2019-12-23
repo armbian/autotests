@@ -20,7 +20,8 @@ source lib/functions.sh
 # needed if we haven't login yet
 get_keys
 
-sshpass -p 1234 ssh ${USER_ROOT}@${HOST} "ls" &>/dev/null
+ssh-keygen -f "/root/.ssh/known_hosts" -R ${HOST}
+sshpass -p 1234 ssh ${USER_ROOT}@${HOST} "ls"
 # if password is still default, change passwd and create new user
 [[ $? -eq 1 ]] && armbian-first-login
 
@@ -35,7 +36,7 @@ while ! ping -c1 $HOST &>/dev/null; do echo "Ping Fail - `date`"; done ; echo "H
 	fi
 
 	echo "Stressing $HOST"
-	sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${HOST} "stress --cpu 8 --io 4 --vm 2 --vm-bytes 128M --timeout 60s"
+	sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${HOST} "apt -y install stress ; stress --cpu 8 --io 4 --vm 2 --vm-bytes 128M --timeout 60s"
 
 	echo "Rebooting $HOST"
 	sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${HOST} "reboot"
