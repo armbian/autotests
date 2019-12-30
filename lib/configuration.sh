@@ -1,6 +1,7 @@
 # configuration
 
 PASSES=5
+STRESS_TIME=100 # seconds
 
 # user
 
