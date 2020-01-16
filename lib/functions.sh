@@ -87,6 +87,7 @@ function check_wlan
 		# get wireless ip
 		local GETWLANIP=$(sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${HOST} "nmcli -t -f UUID,TYPE,DEVICE connection show --active | grep wireless | rev | cut -d ':' -f1 | rev | xargs ifconfig | sed -En -e 's/.*inet ([0-9.]+).*/\1/p'")
 		display_alert "Get wireless ip" "${GETWLANIP}"
+		ssh-keygen -qf "/root/.ssh/known_hosts" -R "${GETWLANIP}" > /dev/null 2>&1
 
 		# disable wired networking
 		sshpass -p ${PASS_ROOT} ssh -o "StrictHostKeyChecking=accept-new" ${USER_ROOT}@${GETWLANIP} "nmcli -t -f UUID,TYPE connection | grep ethernet | sed 's/:.*$//' | xargs nmcli connection down" &>/dev/null
