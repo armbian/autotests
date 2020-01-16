@@ -9,6 +9,7 @@ Collection of basic auto tests
 
 To do:
 
+- make test cases modular
 - data collecting
 - make use of existing 3rd party test suites to run extensive testings
 - run stress test and power cycle n-times
