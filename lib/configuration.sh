@@ -17,7 +17,7 @@ OTHER_NORMAL=""
 
 # host
 
-HOST=""
+HOSTS="" # comma delimited IP addresses
 HOST_IPERF=""
 WLAN_ID=""
 WLAN_PASS=""

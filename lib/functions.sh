@@ -124,11 +124,12 @@ sshpass -p 1234 ssh -o "StrictHostKeyChecking=accept-new" ${USER_ROOT}@${HOST} "
 [[ $? -eq 1 ]] && armbian-first-login
 sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${HOST} "apt -qq -y install jq stress" &>/dev/null
 sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${HOST} "armbianmonitor -u" | tee -a logs/${HOST}.log
+HOSTNAME=$(sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${HOST} "cat /etc/armbian-release | grep BOARD_NAME | sed 's/\"//g' | cut -d "=" -f2")
 x=1
 SUM=0
 while [ $x -le ${PASSES} ]
 do
-while ! ping -c1 $HOST &>/dev/null; do display_alert "Ping failed" "$(date  +%R:%S)" "wrn"; done ; START=$(date +%s); display_alert "Host found" "$(date  +%R:%S)" "info";
+while ! ping -c1 $HOST &>/dev/null; do display_alert "Ping $HOSTNAME failed" "$(date  +%R:%S)" "wrn"; done ; START=$(date +%s); display_alert "Host found" "$(date  +%R:%S)" "info";
 
 
 	TIMES[$x]=$(date +%s)
@@ -137,7 +138,7 @@ while ! ping -c1 $HOST &>/dev/null; do display_alert "Ping failed" "$(date  +%R:
 		check_wlan
 	fi
 
-	display_alert "Stressing [$x] for ${STRESS_TIME}s" "${HOST}" "info";
+	display_alert "Stressing $HOSTNAME [$x] for ${STRESS_TIME}s" "${HOST}" "info";
 	sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${HOST} "stress -q --cpu $(nproc) --io 4 --vm 2 --vm-bytes 128M --timeout ${STRESS_TIME}s"
 	display_alert "Rebooting in 5 seconds" "${HOST}" "wrn"
 	sleep 5
