@@ -2,21 +2,37 @@
 
 Collection of basic auto tests
 
-1. Connects to host
-2. Changes password and creates username
-3. Run iper3 test on wlan0 if defined
-4. Run stress test and reboots n-times
+# How to start?
+
+
+	git clone https://github.com/armbian/autotests
+	cd autotests
+	./go.sh
+
+Then edit userconfig/configuration.sh and add wlan SSID/password, testing subnet or address(s), ...
+
+# What this tool does?
+
+Connects to host(s) or all Armbian hosts in your subnet and run tests found in tests in alphabetical order.
+
+# Which tests are executed?
+
+| test name | function |
+|:-|:-|
+|0000-armbian-first-login.bash|Changes password and creates username|
+|0001-connect-wireless-devices.bash|Connects wireless devices|
+|0003-iperf-on-all-interfaces.bash|Check speed on all devices|
+|0005-used-wireless-modules.bash|Display used wireless modules|
+|0015-strong-stressing.bash|Running heavy stressing for n seconds|
+|0019-7-zip-benchmark.bash|Run 7Zip benchmark|
+|9999-reboot.bash|Reboot the board|
+
 
 To do:
 
-- make test cases modular
+- add more tests
+- make roboust
 - data collecting
-- make use of existing 3rd party test suites to run extensive testings
-- run stress test and power cycle n-times
 - support custom test board https://forum.armbian.com/topic/10841-the-testing-thread
 
 ![Semantic description of image](https://forum.armbian.com/uploads/monthly_2019_09/IMG_0031.thumb.JPG.25382da99ba09c22c27cf8d274141b8b.JPG "Image Title")
-
-Dependencies:
-
-	apt install expect sshpass

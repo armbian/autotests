@@ -17,8 +17,9 @@ OTHER_NORMAL=""
 
 # host
 
-HOSTS="" # comma delimited IP addresses
-HOST_IPERF=""
+HOSTS="" 		# comma delimited IP addresses
+# or
+SUBNET="" 		# Example 192.168.1.0/24
 WLAN_ID=""
 WLAN_PASS=""
 
