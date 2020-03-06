@@ -25,6 +25,7 @@ Connects to host(s) or all Armbian hosts in your subnet and run tests found in t
 |0005-used-wireless-modules.bash|Display used wireless modules|
 |0015-strong-stressing.bash|Running heavy stressing for n seconds|
 |0019-7-zip-benchmark.bash|Run 7Zip benchmark|
+|0030-install-armbian-config.bash|Install armbian-config tool|
 |9999-reboot.bash|Reboot the board|
 
 
