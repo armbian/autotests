@@ -28,7 +28,6 @@ fi
 
 
 
-[[ -z $HOST_IPERF ]] && echo "\$HOST_IPERF not defined. Exiting." && exit 1
 
 for HOST in "${array[@]}"; do
 	rm -f logs/${HOST}.log

@@ -12,9 +12,9 @@ function get_device() {
 		# match only interface names starting with e (Ethernet), br (bridge), w (wireless), r (some Ralink drivers use ra<number> format)
 		if [[ $intf =~ '$1' ]]; then
 			tmp=$(ip -4 addr show dev $intf | grep inet | awk {"print \$2"} | cut -d"/" -f1)
-			if [[ '$2' == ip ]]; then
+			if [[ "'$2'" == ip ]]; then
 				[[ -n $tmp ]] && echo $tmp
-			elif [[ '$2' == noip ]]; then
+			elif [[ "'$2'" == noip ]]; then
 				[[ -z $tmp && -n intf ]] && echo $intf
 			else
 				[[ -n $tmp ]] && echo $intf
@@ -22,7 +22,7 @@ function get_device() {
 
 		fi
 	done'
-	
+
 } # get_ip_addresses
 
 
