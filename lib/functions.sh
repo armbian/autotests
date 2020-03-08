@@ -17,7 +17,7 @@ function get_device() {
 			elif [[ "'$2'" == noip ]]; then
 				[[ -z $tmp && -n intf ]] && echo $intf
 			else
-				[[ -n $tmp ]] && echo $intf
+				echo $intf
 			fi
 
 		fi
@@ -39,27 +39,27 @@ display_alert()
 	case $3 in
 		err)
 		echo -e "[\e[0;31m error \x1B[0m] $1 $tmp" | tee -a ${SRC}/logs/${HOST}.log
-		echo "$1" >> ${SRC}/logs/${HOST}.txt
+		echo "$(date  +%R:%S) $1" >> ${SRC}/logs/${HOST}.txt
 		;;
 
 		wrn)
 		echo -e "[\e[0;35m warn \x1B[0m] $1 $tmp" | tee -a ${SRC}/logs/${HOST}.log
-		echo "$1" >> ${SRC}/logs/${HOST}.txt
+		echo "$(date  +%R:%S) $1" >> ${SRC}/logs/${HOST}.txt
 		;;
 
 		ext)
 		echo -e "[\e[0;32m o.k. \x1B[0m] \e[1;32m$1\x1B[0m $tmp" | tee -a ${SRC}/logs/${HOST}.log
-		echo "$1" >> ${SRC}/logs/${HOST}.txt
+		echo "$(date  +%R:%S) $1" >> ${SRC}/logs/${HOST}.txt
 		;;
 
 		info)
 		echo -e "[\e[0;32m o.k. \x1B[0m] $1 $tmp" | tee -a ${SRC}/logs/${HOST}.log
-		echo "$1" >> ${SRC}/logs/${HOST}.txt
+		echo "$(date  +%R:%S) $1" >> ${SRC}/logs/${HOST}.txt
 		;;
 
 		*)
 		echo -e "[\e[0;32m .... \x1B[0m] $1 $tmp" | tee -a ${SRC}/logs/${HOST}.log
-		echo "$1" >> ${SRC}/logs/${HOST}.txt
+		echo "$(date  +%R:%S) $1" >> ${SRC}/logs/${HOST}.txt
 		;;
 	esac
 }
@@ -76,27 +76,25 @@ SUM=0
 START=$(date +%s)
 while [ $x -le ${PASSES} ]
 do
-while ! ping -c1 $HOST &>/dev/null;	do display_alert "Ping $HOST failed $i" "$(date  +%R:%S)" "wrn"; i=$(( $i + 1 )); [[ $i -gt 5 ]] && return 1;done ; START=$(date +%s); display_alert "Host found" "$HOST" "info";
+while ! ping -c1 $HOST &>/dev/null; do display_alert "Ping $HOST failed $i" "$(date  +%R:%S)" "wrn"; sleep 2; i=$(( $i + 1 )); [[ $i -gt 5 ]] && return 1;done ; START=$(date +%s); display_alert "Host ${HOST} found" "Run $x out of ${PASSES}" "info";
+
 	TIMES[$x]=$(date +%s)
-
 	i=1
-	readarray -t array < <(find $SRC/tests -maxdepth 2 -type f -name '*.bash' | sort)
 
-	for u in "${array[@]}"
-	do
-		. $u
-	done
+	nc -zvw3 $HOST 22 &> /dev/null
+	if [[ $? -ne 0 ]]; then
+		display_alert "Can't connect. SSH on $HOST is closed" "$(date  +%R:%S)" "wrn"
+	else
+
+		readarray -t array < <(find $SRC/tests -maxdepth 2 -type f -name '*.bash' | sort)
+
+		for u in "${array[@]}"
+		do
+			. $u
+		done
+	fi
+
 	x=$(( $x + 1 ))
 
-done
-
-x=2
-while [ $x -lt ${PASSES} ]
-do
-	A=${TIMES[@]:$x:1}
-	x=$(( $x + 1 ))
-	B=${TIMES[@]:$x:1}
-	[[ -z $B ]] && B=$(date +%s)
-	echo $(( $B - $A ))
 done
 }

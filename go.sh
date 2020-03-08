@@ -12,11 +12,13 @@ if [[ ! -f userconfig/configuration.sh ]]; then
 	echo "Setup finished. Edit userconfig/configuration.sh and run ./go.sh again!"
         exit
 fi
-export SRC="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+
+SRC="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 source userconfig/configuration.sh
 source lib/functions.sh
 
-export PASS_ROOT USER_ROOT
+# remove logs
+rm -rf logs/*
 
 if [[ -n $SUBNET ]]; then
 	readarray -t array < <(nmap --open -sn ${SUBNET} | grep "ssh\|Nmap scan report" | grep -v "gateway" | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}')

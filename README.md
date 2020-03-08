@@ -15,6 +15,28 @@ Then edit userconfig/configuration.sh and add wlan SSID/password, testing subnet
 
 Connects to host(s) or all Armbian hosts in your subnet and run tests found in tests in alphabetical order.
 
+One test cycle:
+
+	[ o.k. ] Host x.x.x.x found [ Run 1 out of 3 ]
+	[ o.k. ] 0000-armbian-first-login.bash [ 00:37:13 ]
+	[ o.k. ] 0001-connect-wireless-devices-on-2.4Ghz.bash [ Cubox i2eX/i4 @ 00:37:26 ]
+	[ o.k. ] ...  [ wlan0 ]
+	[ o.k. ] ...  [ wlxxxxxxxxxxxxx ]
+	[ o.k. ] 0003-iperf-on-all-interfaces.bash [ Cubox i2eX/i4 @ 00:37:49 ]
+	[ o.k. ] ..."eth0" ethernet (fec), hw, mtu 1500 [ ~399 MBits/s ~564 MBits/s ]
+	[ o.k. ] ..."Broadcom BCM4330" wifi (brcmfmac), hw, mtu 1500 [  ~63 MBits/s ]
+	[ o.k. ] ..."Realtek RTL8811AU 802.11a/b/g/n/ac" wifi (88XXau), hw, mtu 2312 [  ~73 MBits/s ]
+	[ o.k. ] 0005-connect-wireless-devices-on-5.0Ghz.bash [ Cubox i2eX/i4 @ 00:38:40 ]
+	[ o.k. ] ...  [ wlan0 ]
+	[ o.k. ] ...  [ wlxxxxxxxxxxxxx ]
+	[ o.k. ] 0003-iperf-on-all-interfaces.bash [ Cubox i2eX/i4 @ 00:39:31 ]
+	[ o.k. ] ..."eth0" ethernet (fec), hw, mtu 1500 [ ~400 MBits/s ~552 MBits/s ]
+	[ o.k. ] ..."Realtek RTL8811AU 802.11a/b/g/n/ac" wifi (88XXau), hw, mtu 2312 [  ~205 MBits/s ]
+	[ o.k. ] 0015-strong-stressing.bash [ 00:40:11 + 100s ]
+	[ o.k. ] 0019-7-zip-benchmark.bash [ 00:41:52 ]
+	[ o.k. ] 9999-reboot.bash [ 00:45:16 ]
+	[ warn ] Rebooting in 3 seconds [ x.x.x.x ]
+
 # Which tests are executed?
 
 | test name | function |

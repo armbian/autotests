@@ -43,5 +43,8 @@ if [[ $? -eq 1 ]]; then
 	# display output
 	echo "${MAKE_USER}" | tee -a logs/${HOST}.log
 fi
-sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${HOST} "apt -qq -y install jq stress" &>/dev/null
+sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${HOST} "apt -qq -y install jq stress armbian-config" &>/dev/null
 BOARD_NAME=$(sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${HOST} "cat /etc/armbian-release | grep BOARD_NAME | sed 's/\"//g' | cut -d "=" -f2")
+
+# cat armbian release file to the logs
+sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${HOST} "cat /etc/armbian-release | sed -e 's/^/'$(date  +%R:%S)' /' ">> ${SRC}/logs/${HOST}.txt 2>&1
