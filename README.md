@@ -15,7 +15,7 @@ cd autotests
 
 	- set wlan SSID/password
 	- set test subnet or IP address(s)
-	- set MAC address of your BT device (Anroid phone for example)
+	- set MAC address of your BT device (Android phone for example)
 	- change numer of passes (optional)
 	- change stress time in seconds (optional)
 3. Run:
