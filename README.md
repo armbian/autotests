@@ -6,23 +6,22 @@ Collection of basic auto tests
 
 
 1. Clone sources and go inside folder autotests
+```
+git clone https://github.com/armbian/autotests
+cd autotests
+```
 
-	git clone https://github.com/armbian/autotests
-	cd autotests
+2. Edit userconfig/configuration.sh
 
-2. Then edit userconfig/configuration.sh
-
-- set wlan SSID/password
-- set test subnet or IP address(s)
-- set MAC address of your BT device (Anroid phone for example)
-
-Optional:
-
-- change numer of passes
-- change stress time in seconds
-
-	./go.sh
-
+	- set wlan SSID/password
+	- set test subnet or IP address(s)
+	- set MAC address of your BT device (Anroid phone for example)
+	- change numer of passes (optional)
+	- change stress time in seconds (optional)
+3. Run:
+```
+./go.sh
+```
 
 
 # What this tool does?
