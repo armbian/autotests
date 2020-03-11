@@ -1,10 +1,7 @@
 #!/bin/bash
 
 source $SRC/lib/functions.sh
-display_alert "$(basename $BASH_SOURCE)" "$BOARD_NAME @ $(date  +%R:%S)" "info"
-
-#sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${HOST} "rm -f /etc/NetworkManager/system-connections/*"
-#sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${HOST} "service network-manager reload" # bug workaround https://bugs.launchpad.net/ubuntu/+source/network-manager/+bug/1681513
+display_alert "$(basename $BASH_SOURCE)" "${BOARD_NAMES[$x]} @ ${HOST}" "info"
 
 readarray -t array < <(get_device "^[wr].*")
 

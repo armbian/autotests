@@ -20,9 +20,12 @@ OTHER_NORMAL=""
 HOSTS="" 		# comma delimited IP addresses
 # or
 SUBNET="" 		# Example 192.168.1.0/24
+EXCLUDE=""		# Example 10.0.30.99,10.0.30.1
 
 WLAN_ID_24=""
 WLAN_PASS_24=""
 
 WLAN_ID_50=""
 WLAN_PASS_50=""
+
+BLUEDEV=""		# MAC address of your BT device, usually phone which is near by testing devices to make a ping

@@ -3,7 +3,7 @@
 source $SRC/lib/functions.sh
 
 display_alert "$(basename $BASH_SOURCE)" "$(date  +%R:%S)" "info"
-display_alert "Rebooting in 3 seconds" "${HOST}" "wrn"
+display_alert "Rebooting in 3 seconds" "${HOST}" "info"
 sleep 3
 sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${HOST} "reboot" &>/dev/null
 sleep 3

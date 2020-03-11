@@ -69,23 +69,20 @@ display_alert()
 
 function run_tests
 {
-x=1
+r=1
 i=1
 
 SUM=0
 START=$(date +%s)
-while [ $x -le ${PASSES} ]
+while [ $r -le ${PASSES} ]
 do
-while ! ping -c1 $HOST &>/dev/null; do display_alert "Ping $HOST failed $i" "$(date  +%R:%S)" "wrn"; sleep 2; i=$(( $i + 1 )); [[ $i -gt 5 ]] && return 1;done ; START=$(date +%s); display_alert "Host ${HOST} found" "Run $x out of ${PASSES}" "info";
+while ! ping -c1 $HOST &>/dev/null; do display_alert "Ping $HOST failed $i" "$(date  +%R:%S)" "info"; sleep 2; i=$(( $i + 1 )); [[ $i -gt 5 ]] && return 1;done ; START=$(date +%s); display_alert "Host ${HOST} found" "Run $r out of ${PASSES}" "info";
 
-	TIMES[$x]=$(date +%s)
 	i=1
-
 	nc -zvw3 $HOST 22 &> /dev/null
 	if [[ $? -ne 0 ]]; then
 		display_alert "Can't connect. SSH on $HOST is closed" "$(date  +%R:%S)" "wrn"
 	else
-
 		readarray -t array < <(find $SRC/tests -maxdepth 2 -type f -name '*.bash' | sort)
 
 		for u in "${array[@]}"
@@ -94,7 +91,7 @@ while ! ping -c1 $HOST &>/dev/null; do display_alert "Ping $HOST failed $i" "$(d
 		done
 	fi
 
-	x=$(( $x + 1 ))
+	r=$(( $r + 1 ))
 
 done
 }

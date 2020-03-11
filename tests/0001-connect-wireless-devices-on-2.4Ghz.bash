@@ -1,11 +1,7 @@
 #!/bin/bash
 
 source $SRC/lib/functions.sh
-display_alert "$(basename $BASH_SOURCE)" "$BOARD_NAME @ $(date  +%R:%S)" "info"
-
-#sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${HOST} "rm -f /etc/NetworkManager/system-connections/*"
-#sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${HOST} "service network-manager reload" # bug workaround https://bugs.launchpad.net/ubuntu/+source/network-manager/+bug/1681513
-#sleep 5
+display_alert "$(basename $BASH_SOURCE)" "${BOARD_NAMES[$x]} @ ${HOST}" "info"
 
 readarray -t array < <(get_device "^[wr].*" "")
 for u in "${array[@]}"
@@ -17,5 +13,6 @@ do
 	sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${HOST} "nmcli con modify $u wifi-sec.key-mgmt wpa-psk" >> ${SRC}/logs/${HOST}.txt 2>&1
 	sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${HOST} "nmcli con modify $u wifi-sec.psk ${WLAN_PASS_24}" >> ${SRC}/logs/${HOST}.txt 2>&1
 	sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${HOST} "nmcli con up $u" >> ${SRC}/logs/${HOST}.txt 2>&1
-	[[ $? -ne 0 ]] && display_alert "Something went wrong with $u - check logs" "$u" "wrn"
+	[[ $? -ne 0 ]] && display_alert "Something went wrong with $u - check logs ${SRC}/logs/${HOST}.txt" "$u" "wrn"
 done
+sleep 3

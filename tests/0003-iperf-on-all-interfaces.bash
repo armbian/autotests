@@ -1,12 +1,11 @@
 #!/bin/bash
-
 source $SRC/lib/functions.sh
 
-display_alert "$(basename $BASH_SOURCE)" "$BOARD_NAME @ $(date  +%R:%S)" "info"
+display_alert "$(basename $BASH_SOURCE)" "${BOARD_NAMES[$x]} @ ${HOST}" "info"
 
 sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${HOST} "pkill iperf3;iperf3 -Ds --pidfile /var/run/iperf3"
 
-readarray -t array < <(get_device "^bond.*|^[ewr].*|^br.*|^lt.*|^umts.*" "ip")
+readarray -t array < <(get_device "^bond.*|^[ewr].*|^br.*|^lt.*|^umts.*|^lan.*" "ip")
 for u in "${array[@]}"
 do
 
