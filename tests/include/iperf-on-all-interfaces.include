@@ -5,14 +5,16 @@ for u in "${array[@]}"
 do
 	
 	device=$(sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${USER_HOST} "nmcli | awk -vRS='connected' '/$u/{print}' | head -3 | tail -2  | sed 'N;s/\n/ /' | tr -d '\011' | sed 's/..:..:..:..:..:.., //' | sed 's/, hw, mtu [0-9][0-9][0-9][0-9]//'")
-	speed_to=$(echo "$(iperf3 -c ${u} -t 10 -J | jq -r '.intervals' | grep bits_per_second | awk '{print $2}' | awk '{printf("%.0f\n", $1)}' | paste -sd+ | bc) / 20" | bc | awk '{$1/=1000000;printf "%.0f MBits/s\n",$1}')
+	speed_to=$(echo "$(iperf3 -c ${u} -t 10 -J | jq -r '.intervals' | grep bits_per_second | awk '{print $2}' | awk '{printf("%.0f\n", $1)}' | paste -sd+ | bc) / 20" | bc | awk '{$1/=1000000;printf "%.0f\n",$1}')
 	if [[ $device == *ethernet* ]]; then
-		speed_from="~"$(echo "$(iperf3 -R -c ${u} -t 10 -J | jq -r '.intervals' | grep bits_per_second | awk '{print $2}' | awk '{printf("%.0f\n", $1)}' | paste -sd+ | bc) / 20" | bc | awk '{$1/=1000000;printf "%.0f MBits/s\n",$1}')" "
+		speed_from="~ "$(echo "$(iperf3 -R -c ${u} -t 10 -J | jq -r '.intervals' | grep bits_per_second | awk '{print $2}' | awk '{printf("%.0f\n", $1)}' | paste -sd+ | bc) / 20" | bc | awk '{$1/=1000000;printf "%.0f\n",$1}')" "
 		else
 		unset speed_from
 	fi
-	display_alert "... $device" "${speed_from}~${speed_to}" "info"
+	display_alert "... $device" "${speed_from}~ ${speed_to} MBits/s" "info"
+	TEST_OUTPUT+="<small>$(echo $device | cut -d \( -f2 | cut -d \) -f1)</small><br>${speed_from}~${speed_to}<br>"
 
 done
+[[ ${#array[@]} -eq 0 ]] && TEST_OUTPUT="<img width=16 src=https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Philippines_road_sign_R3-1.svg/220px-Philippines_road_sign_R3-1.svg.png>"
 sleep 1
 sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${USER_HOST} "pkill -F /var/run/iperf3"

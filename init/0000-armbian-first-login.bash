@@ -45,9 +45,15 @@ if [[ $? -eq 1 ]]; then
 	echo "${MAKE_USER}" >> ${SRC}/logs/${USER_HOST}.log
 fi
 
-sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${USER_HOST} "apt -qq -y install jq stress armbian-config bluez-tools" &>/dev/null
-BOARD_NAME=$(sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${USER_HOST} "cat /etc/armbian-release | grep BOARD_NAME | sed 's/\"//g' | cut -d "=" -f2")
-display_alert "$BOARD_NAME" "$USER_HOST" "info"
-# enable BASH and cat armbian release file to the logs
-sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${USER_HOST} "chsh -s /bin/bash; cat /etc/armbian-release | sed -e 's/^/'$(date  +%R:%S)' /' ">> ${SRC}/logs/${USER_HOST}.txt 2>&1
+sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${USER_HOST} "chsh -s /bin/bash; apt -qq -y install jq stress armbian-config bluez-tools" &>/dev/null
 
+
+BOARD_DATA=$(sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${USER_HOST} "cat /etc/armbian-release")
+BOARD_KERNEL=$(sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${USER_HOST} "uname -sr")
+echo -e "$BOARD_DATA" >> ${SRC}/logs/${USER_HOST}.txt 2>&1
+BOARD_NAME=$(echo -e "$BOARD_DATA" | grep BOARD_NAME | sed 's/\"//g' | cut -d "=" -f2)
+BOARD_URL="https://www.armbian.com/"$(echo -e "$BOARD_DATA" | grep BOARD | head -1 | cut -d "=" -f2)
+BOARD_VERSION=$(echo -e "$BOARD_DATA" | grep VERSION | head -1 | cut -d "=" -f2)
+BOARD_DISTRIBUTION_CODENAME=$(echo -e "$BOARD_DATA" | grep DISTRIBUTION_CODENAME | head -1 | cut -d "=" -f2)
+
+display_alert "$BOARD_NAME $BOARD_KERNEL" "$USER_HOST" "info"

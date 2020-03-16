@@ -80,11 +80,19 @@ while ! ping -c1 $USER_HOST &>/dev/null; do display_alert "Ping $USER_HOST faile
 		display_alert "Can't connect. SSH on $USER_HOST is closed" "$(date  +%R:%S)" "wrn"
 	else
 		readarray -t array < <(find $SRC/tests -maxdepth 2 -type f -name '*.bash' | sort)
-
+		HEADER_MD+="\n|$BOARD_NAME|"
+		HEADER_HTML+="\n<tr><td>$r/${PASSES}</td><td><a href=${BOARD_URLS[$x]}>${BOARD_NAMES[$x]}</a> ${BOARD_VERSIONS[$x]} ${BOARD_DISTRIBUTION_CODENAMES[$x]}<br>${BOARD_KERNELS[$x]}</td>"
 		for u in "${array[@]}"
 		do
+			unset TEST_OUTPUT
+			DATA_ALIGN="center"
 			. $u
+			[[ $TEST_SKIP != "true" ]] && HEADER_MD+="$TEST_OUTPUT|" && HEADER_HTML+="<td align=$DATA_ALIGN>$TEST_OUTPUT</td>"
+			unset TEST_SKIP
 		done
+		HEADER_HTML+="</tr>\n"
+		#echo -e $HEADER_MD
+		#echo -e $HEADER_HTML
 	fi
 
 	r=$(( $r + 1 ))
