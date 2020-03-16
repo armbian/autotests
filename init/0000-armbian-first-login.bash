@@ -45,7 +45,7 @@ if [[ $? -eq 1 ]]; then
 	echo "${MAKE_USER}" >> ${SRC}/logs/${USER_HOST}.log
 fi
 
-sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${USER_HOST} "chsh -s /bin/bash; apt -qq -y install jq stress armbian-config bluez-tools" &>/dev/null
+sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${USER_HOST} "chsh -s /bin/bash; apt -qq -y install jq stress armbian-config bluez-tools iozone3" &>/dev/null
 
 
 BOARD_DATA=$(sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${USER_HOST} "cat /etc/armbian-release")
