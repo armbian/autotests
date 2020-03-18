@@ -21,6 +21,7 @@ HOSTS="" 		# comma delimited IP addresses
 # or
 SUBNET="" 		# Example 192.168.1.0/24
 EXCLUDE=""		# Example 10.0.30.99,10.0.30.1
+INCLUDE=""		# Include specific IP outside SUBNET when using SUBNET
 
 WLAN_ID_24=""
 WLAN_PASS_24=""

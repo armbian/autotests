@@ -1,6 +1,18 @@
 #!/bin/bash
 
 
+function get_board_data(){
+
+	BOARD_DATA=$(sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${USER_HOST} "cat /etc/armbian-release")
+	BOARD_KERNEL=$(sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${USER_HOST} "uname -sr")
+	echo -e "$BOARD_DATA" >> ${SRC}/logs/${USER_HOST}.txt 2>&1
+	BOARD_NAME=$(echo -e "$BOARD_DATA" | grep BOARD_NAME | sed 's/\"//g' | cut -d "=" -f2)
+	BOARD_URL="https://www.armbian.com/"$(echo -e "$BOARD_DATA" | grep BOARD | head -1 | cut -d "=" -f2)
+	BOARD_VERSION=$(echo -e "$BOARD_DATA" | grep VERSION | head -1 | cut -d "=" -f2)
+	BOARD_DISTRIBUTION_CODENAME=$(echo -e "$BOARD_DATA" | grep DISTRIBUTION_CODENAME | head -1 | cut -d "=" -f2)
+
+}
+
 function get_device() {
 	local ips=()
 	sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${USER_HOST} '

@@ -21,6 +21,7 @@ source lib/functions.sh
 rm -rf logs/*
 
 [[ -n $EXCLUDE ]] && HOST_EXCLUDE="--exclude ${EXCLUDE}"
+[[ -n $INCLUDE ]] && IFS=', ' read -r -a includearray <<< "$INCLUDE"
 
 if [[ -n $SUBNET ]]; then
 	readarray -t hostarray < <(nmap $HOST_EXCLUDE --open -sn ${SUBNET} | grep "ssh\|Nmap scan report" | grep -v "gateway" | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}')
@@ -29,6 +30,8 @@ elif [[ -n $HOSTS ]]; then
 else
 	echo "\$HOST not defined. Exiting." && exit 1
 fi
+
+hostarray=("${includearray[@]}" "${hostarray[@]}")
 
 DRY_RUN=true
 HEADER_HTML="<html>
@@ -67,6 +70,7 @@ HEADER_HTML+="</tr><tr><td align=middle colspan=3>Iperf (MBits/s)</td><td align=
 
 unset DRY_RUN
 
+x=1
 BOARD_NAMES=()
 BOARD_KERNELS=()
 BOARD_URLS=()
@@ -83,6 +87,7 @@ for USER_HOST in "${hostarray[@]}"; do
 		BOARD_VERSIONS+=("$BOARD_VERSION")
 		BOARD_DISTRIBUTION_CODENAMES+=("$BOARD_DISTRIBUTION_CODENAME")
 #		BOARD_PIDS+=("$!");
+		x=$((x+1))
 	done
 done
 

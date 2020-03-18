@@ -72,21 +72,27 @@ One test cycle:
 
 | test name | function |
 |:-|:-|
-|0000-armbian-first-login.bash|Changes password and creates username|
-|0001-connect-wireless-devices-on-2.4Ghz.bash|Connects wireless devices on 2.4G band|
-|0003-iperf-on-all-interfaces.bash|Check speed on all devices|
-|0005-connect-wireless-devices-on-5Ghz.bash|Connects wireless devices on 5G band|
-|0007-iperf-on-all-interfaces.bash|Check speed on all devices|
-|0008-bluetoth.bash|Ping Bluetooth device to check basic BT functionality|
-|0015-strong-stressing.bash|Running heavy stressing for n seconds|
-|0016-dvfs.bash|Get min and max CPU temperature to see if DVFS is operational|
-|0019-7-zip-benchmark.bash|Run 7Zip benchmark|
+|0000-read-board-data.bash| Read board OS information|
+|0001-nigtly-stable-switch.bash| Switching between nightly and stable, odd/even|
+|0002-update-and-upgrade.bash| Upgrade all packages|
+|0008-connect-wireless-devices-on-2.4Ghz.bash|Connects wireless devices on 2.4G band|
+|0013-iperf-on-all-wired-interfaces.bash|Check speed on all wired devices|
+|0014-iperf-on-all-wireless-interfaces.bash|Check speed on all wireless devices|
+|0015-connect-wireless-devices-on-5.0Ghz.bash|Connects wireless devices on 5G band|
+|0017-iperf-on-all-wireless-interfaces.bash|Check speed on all wireless devices|
+|0018-io-tests-memory.bash| Determine maximum memory random write speed|
+|0019-io-tests-drive.bash| Determine maximum SD/eMMC random write speed|
+|0111-bluetoth.bash|Ping Bluetooth device to check basic BT functionality|
+|0115-strong-stressing.bash|Running heavy stressing for n seconds|
+|0116-dvfs.bash|Get min and max CPU temperature to see if DVFS is operational|
+|0119-7-zip-benchmark.bash.disabled|Run 7Zip benchmark|
 |9999-reboot.bash|Reboot the board|
 
 
 To do:
 
 - improve errors catching
+- create XML data export for single board and together
 - common data collecting
 - support custom test board https://forum.armbian.com/topic/10841-the-testing-thread
 
