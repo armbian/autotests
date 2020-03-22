@@ -63,39 +63,19 @@ The script will display which board gets tested
 
 It Connects to the host(s) or all Armbian hosts in your subnet and runs the tests found in folder tests in alphabetical order.
 
-Example of one test cycle:
+Example report:
 
-	[ o.k. ] Host x.x.x.x found [ Run 1 out of 1 ]
-	[ o.k. ] 0001-connect-wireless-devices-on-2.4Ghz.bash [ Tinkerboard @ x.x.x.x ]
-	[ o.k. ] ...  [ wlan0 ]
-	[ o.k. ] ...  [ wlxxxxxxxxxxxxx ]
-	[ o.k. ] ...  [ wlxxxxxxxxxxxxx ]
-	[ o.k. ] ...  [ wlxxxxxxxxxxxxx ]
-	[ o.k. ] 0003-iperf-on-all-interfaces.bash [ Tinkerboard @ x.x.x.x ]
-	[ o.k. ] ..."eth0" ethernet (rk_gmac-dwmac), hw, mtu 1500 [ ~941 MBits/s ~944 MBits/s ]
-	[ o.k. ] ..."wlan0" wifi (rtl8723bs), hw, mtu 1500 [  ~50 MBits/s ]
-	[ o.k. ] ..."148f 7601" wifi (mt7601u), hw, mtu 1500 [  ~28 MBits/s ]
-	[ o.k. ] ..."Realtek 802.11n NIC" wifi (8188eu), hw, mtu 1500 [  ~60 MBits/s ]
-	[ o.k. ] ..."Realtek 802.11ac NIC" wifi (rtl8821cu), hw, mtu 1500 [  ~0 MBits/s ]
-	[ o.k. ] ..."Realtek 802.11ac WLAN Adapter" wifi (rtl88xxau), hw, mtu 2312 [  ~61 MBits/s ]
-	[ o.k. ] ..."Ralink 802.11 n WLAN" wifi (rt2800usb), hw, mtu 1500 [  ~55 MBits/s ]
-	[ o.k. ] ..."Realtek AC1200 MU-MIMO USB2.0 Adapter" wifi (rtl88x2bu), hw, mtu 1500 [  ~58 MBits/s ]
-	[ o.k. ] 0005-connect-wireless-devices-on-5.0Ghz.bash [ Tinkerboard @ x.x.x.x ]
-	[ o.k. ] ...  [ wlan0 ]
-	[ o.k. ] ...  [ wlxxxxxxxxxxxxx ]
-	[ o.k. ] ...  [ wlxxxxxxxxxxxxx ]
-	[ o.k. ] ...  [ wlxxxxxxxxxxxxx ]
-	[ o.k. ] 0003-iperf-on-all-interfaces.bash [ Tinkerboard @ x.x.x.x ]
-	[ o.k. ] ..."eth0" ethernet (rk_gmac-dwmac), hw, mtu 1500 [ ~941 MBits/s ~944 MBits/s ]
-	[ o.k. ] ..."wlan0" wifi (rtl8723bs), hw, mtu 1500 [  ~22 MBits/s ]
-	[ o.k. ] ..."Realtek 802.11ac NIC" wifi (rtl8821cu), hw, mtu 1500 [  ~118 MBits/s ]
-	[ o.k. ] ..."Realtek AC1200 MU-MIMO USB2.0 Adapter" wifi (rtl88x2bu), hw, mtu 1500 [  ~130 MBits/s ]
-	[ o.k. ] 0008-bluetoth.bash [ Tinkerboard @ x.x.x.x ]
-	[ o.k. ] Bluetooth ping to your test device was succesfull [ Mi Telefon ]
-	[ o.k. ] 0016-dvfs.bash [ Tinkerboard @ x.x.x.x ]
-	[ o.k. ] DVFS works [ 600 - 1800 Mhz ]
-	[ o.k. ] 9999-reboot.bash [ 21:51:57 ]
-	[ o.k. ] Rebooting in 3 seconds [ x.x.x.x ]
+<table cellspacing=0 width=100% border=1><tr><td align=right rowspan=2>#</td><td align=center rowspan=2>Board<br>/<br>Cycle</td><td rowspan=2>Version / distribution <br>Kernel / variant</td>
+<td align=center rowspan=1><img width=32 src=https://www.pngkey.com/png/detail/856-8562696_ethernet-on-icon-rj45-icon.png><br><small>Lan</small></td><td align=center rowspan=1><img width=32 src=https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-wifi-32.png><br><small>2.4Ghz</small></td><td align=center rowspan=1><img width=32 src=https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-wifi-32.png><br><small>5Ghz</small></td><td align=center rowspan=1><br><small>memory</small></td><td align=center rowspan=1><br><small>storage</small></td><td align=center rowspan=2><img width=32 src=https://cdn4.iconfinder.com/data/icons/vecico-connectivity/288/bluetoothBG-512.png><br><small></small></td><td align=center rowspan=2><img width=32 src=https://f0.pngfuel.com/png/586/784/fire-illustration-png-clip-art.png><br><small>Stress 2s</small></td><td align=center rowspan=2><br><small>DVFS (Mhz)</small></td></tr><tr><td align=middle colspan=3>Iperf send/receive (MBits/s)</td><td align=middle colspan=2>IO read/write (MBits/s)</td></tr>
+
+<tr><td align=right rowspan=3>1</td><td colspan=10>Odroid XU4 ###.###.###.210</td></td></tr><tr><td align=center>1/2<br><small>22:52:45</small></td><td>20.02.1 (buster)<br>Linux 5.4.19-odroidxu4 stable</td><td align=center><small>r8152</small><br> 894 - 919<br></td><td align=center><small>rtl88x2bu</small><br>104<br></td><td align=center><small>rtl88x2bu</small><br>161<br></td><td align=center>745 - 754</td><td align=center>845 - 23</td><td align=center><img width=16 src=https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Philippines_road_sign_R3-1.svg/220px-Philippines_road_sign_R3-1.svg.png></td><td align=center><img width=16 src=https://github.githubassets.com/images/icons/emoji/unicode/2714.png></td><td align=center>600 - 1400</td></tr>
+
+<tr><td align=center>2/2<br><small>23:05:33</small></td><td>20.02.1 (buster)<br>Linux 5.4.19-odroidxu4 stable</td><td align=center><small>r8152</small><br> 900 - 913<br></td><td align=center><small>8188eu</small><br>8<br><small>rtl8821cu</small><br>5<br><small>rtl88xxau</small><br>4<br></td><td align=center><small>rtl8821cu</small><br>81<br><small>rtl88x2bu</small><br>66<br></td><td align=center>729 - 719</td><td align=center>821 - 23</td><td align=center><img width=16 src=https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Philippines_road_sign_R3-1.svg/220px-Philippines_road_sign_R3-1.svg.png></td><td align=center><img width=16 src=https://github.githubassets.com/images/icons/emoji/unicode/2714.png></td><td align=center>600 - 1400</td></tr>
+
+<tr><td align=right rowspan=3>2</td><td colspan=10>RockPi-4B ###.###.###.217</td></td></tr><tr><td align=center>1/2<br><small>23:13:32</small></td><td>20.02.1 (buster)<br>Linux 5.4.26-rockchip64 stable</td><td align=center><small>rk_gmac-dwmac</small><br> 929 - 913<br></td><td align=center><img width=16 src=https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Philippines_road_sign_R3-1.svg/220px-Philippines_road_sign_R3-1.svg.png></td><td align=center><img width=16 src=https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Philippines_road_sign_R3-1.svg/220px-Philippines_road_sign_R3-1.svg.png></td><td align=center>1658 - 1624</td><td align=center>1601 - 69</td><td align=center><img width=16 src=https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Philippines_road_sign_R3-1.svg/220px-Philippines_road_sign_R3-1.svg.png></td><td align=center><img width=16 src=https://github.githubassets.com/images/icons/emoji/unicode/2714.png></td><td align=center>600 - 1512</td></tr>
+
+<tr><td align=center>2/2<br><small>23:19:35</small></td><td>20.05.0-trunk.082 (buster)<br>Linux 5.4.27-rockchip64 nightly</td><td align=center><small>rk_gmac-dwmac</small><br> 791 - 858<br></td><td align=center><small>brcmfmac</small><br>82<br></td><td align=center><small>brcmfmac</small><br>193<br></td><td align=center>1637 - 1595</td><td align=center>1617 - 69</td><td align=center><img width=16 src=https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Philippines_road_sign_R3-1.svg/220px-Philippines_road_sign_R3-1.svg.png></td><td align=center><img width=16 src=https://github.githubassets.com/images/icons/emoji/unicode/2714.png></td><td align=center>600 - 1512</td></tr>
+</table>
 
 # Which tests are executed?
 
