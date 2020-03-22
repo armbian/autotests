@@ -7,4 +7,4 @@ TEST_SKIP="true"
 
 get_board_data
 
-display_alert "$BOARD_NAME $BOARD_KERNEL" "$USER_HOST" "info"
+display_alert "$BOARD_NAME $BOARD_KERNEL" "$(mask_ip "$USER_HOST")" "info"

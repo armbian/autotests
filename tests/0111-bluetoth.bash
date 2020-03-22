@@ -7,9 +7,9 @@ TEST_ICON="<img width=32 src=https://cdn4.iconfinder.com/data/icons/vecico-conne
 
 unset resoult
 
-display_alert "$(basename $BASH_SOURCE)" "${BOARD_NAMES[$x]} @ ${USER_HOST}" "info"
+display_alert "$(basename $BASH_SOURCE)" "${BOARD_NAME}" "info"
 if [[ -n $BLUEDEV ]]; then
-	resoult=$(sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${USER_HOST} "hcitool name $BLUEDEV 2>/dev/null")
+	resoult=$(remote_exec "hcitool name $BLUEDEV 2>/dev/null")
 else
 	TEST_OUTPUT="n/a"
 	return 0

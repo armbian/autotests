@@ -4,16 +4,17 @@
 #
 
 apt install -y -qq jq expect sshpass nmap &>/dev/null
-mkdir -p userconfig logs
+mkdir -p userconfig logs reports
 
 # create sample configuration
 if [[ ! -f userconfig/configuration.sh ]]; then
 	cp lib/configuration.sh userconfig/configuration.sh
 	echo "Setup finished. Edit userconfig/configuration.sh and run ./go.sh again!"
-        exit
+	exit
 fi
 
 SRC="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+REPORT="$(date +%Y%m%d%H%M%S)"
 source userconfig/configuration.sh
 source lib/functions.sh
 
@@ -24,7 +25,7 @@ rm -rf logs/*
 [[ -n $INCLUDE ]] && IFS=', ' read -r -a includearray <<< "$INCLUDE"
 
 if [[ -n $SUBNET ]]; then
-	readarray -t hostarray < <(nmap $HOST_EXCLUDE --open -sn ${SUBNET} | grep "ssh\|Nmap scan report" | grep -v "gateway" | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}')
+	readarray -t hostarray < <(nmap $HOST_EXCLUDE --open -sn ${SUBNET} 2> /dev/null | grep "ssh\|Nmap scan report" | grep -v "gateway" | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}')
 elif [[ -n $HOSTS ]]; then
 	IFS=', ' read -r -a hostarray <<< "$HOSTS"
 else
@@ -46,7 +47,7 @@ table {
 }
 </style>
 </head>
-<body><table cellspacing=0 width=100% border=1><tr><td rowspan=2>Cycle</td><td rowspan=2>Board</td>\n"
+<body><table cellspacing=0 width=100% border=1><tr><td align=right rowspan=2>#</td><td align=center rowspan=2>Board<br>/<br>Cycle</td><td rowspan=2>Version / distribution <br>Kernel / variant</td>\n"
 HEADER_MD="|Board|"
 readarray -t array < <(find $SRC/tests -maxdepth 2 -type f -name '*.bash' | sort)
 COLOUMB=0
@@ -66,7 +67,7 @@ do
 	[[ $TEST_SKIP != "true" ]] && HEADER_MD+=":-|"
 done
 
-HEADER_HTML+="</tr><tr><td align=middle colspan=3>Iperf (MBits/s)</td><td align=middle colspan=2>IO (MBits/s)</td></tr>\n"
+HEADER_HTML+="</tr><tr><td align=middle colspan=3>Iperf send/receive (MBits/s)</td><td align=middle colspan=2>IO read/write (MBits/s)</td></tr>\n"
 
 unset DRY_RUN
 
@@ -81,12 +82,12 @@ for USER_HOST in "${hostarray[@]}"; do
 	for u in "${array[@]}"
 	do
 		. $u
-		BOARD_NAMES+=("$BOARD_NAME")
-		BOARD_KERNELS+=("$BOARD_KERNEL")
-		BOARD_URLS+=("$BOARD_URL")
-		BOARD_VERSIONS+=("$BOARD_VERSION")
-		BOARD_DISTRIBUTION_CODENAMES+=("$BOARD_DISTRIBUTION_CODENAME")
-#		BOARD_PIDS+=("$!");
+		# always start with the stock build
+		if [[ $BOARD_IMAGE_TYPE != stable ]]; then
+			display_alert "Switch to stable builds" "$(date  +%R:%S)" "wrn"
+			remote_exec "LANG=C armbian-config main=System selection=Stable; reboot"
+			#sshpass -p ${PASS_ROOT} ssh -t ${USER_ROOT}@${USER_HOST} "LANG=C armbian-config main=System selection=Stable; reboot" &>/dev/null
+		fi
 		x=$((x+1))
 	done
 done
@@ -110,4 +111,4 @@ done
 
 HEADER_HTML+="</table></body>
 </html>\n"
-echo -e $HEADER_HTML >> ${SRC}/logs/report.html
+echo -e $HEADER_HTML >> ${SRC}/reports/${REPORT}.html

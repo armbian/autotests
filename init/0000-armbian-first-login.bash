@@ -3,7 +3,7 @@
 source $SRC/lib/functions.sh
 
 #display_alert "$(basename $BASH_SOURCE)" "$(date  +%R:%S)" "info"
-ssh-keygen -qf "/root/.ssh/known_hosts" -R "${USER_HOST}" > /dev/null 2>&1
+ssh-keygen -qf "$HOME/.ssh/known_hosts" -R "${USER_HOST}" > /dev/null 2>&1
 sshpass -p 1234 ssh -o "StrictHostKeyChecking=accept-new" ${USER_ROOT}@${USER_HOST} "\x03" &>/dev/null
 if [[ $? -eq 1 ]]; then
 	# clean keys
@@ -45,7 +45,9 @@ if [[ $? -eq 1 ]]; then
 	echo "${MAKE_USER}" >> ${SRC}/logs/${USER_HOST}.log
 fi
 
-sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${USER_HOST} "chsh -s /bin/bash; apt -y purge armbian-config; apt -qq -y install jq stress armbian-config bluez-tools iozone3" &>/dev/null
+remote_exec "chsh -s /bin/bash; apt -y purge armbian-config; apt -qq -y install jq stress armbian-config bluez-tools iozone3" &>/dev/null
+#sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${USER_HOST} "chsh -s /bin/bash; apt -y purge armbian-config; apt -qq -y install jq stress armbian-config bluez-tools iozone3" &>/dev/null
 
 get_board_data
-display_alert "${x}. $BOARD_NAME $BOARD_KERNEL" "$USER_HOST" "info"
+display_alert "${x}. $BOARD_NAME $BOARD_KERNEL $BOARD_IMAGE_TYPE" "$(mask_ip "$USER_HOST")" "info"
+
