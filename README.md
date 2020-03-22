@@ -1,6 +1,5 @@
-# Armbian auto testing
-
-Collection of basic auto tests
+<h3 align=center><a href="#armbian-build-tools"><img src=".github/armbian-logo.png" alt="Armbian logo" width="144"></a><br>
+auto testing</h3>
 
 # TL;DR
 Script can be installed on any Debian based Linux device on your network. Adapt the configuration-file to your requirements, start the test procedure and wait until its done. Check the logs/ for errors and summary in /reports
