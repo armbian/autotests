@@ -2,8 +2,8 @@
 
 Collection of basic auto tests
 
-#Introduction
-TL;DR  It is installed on any Linux device in your network. Adapt the configuration-file to your requirements. Start the test procedure. Let it finish. Check the output for errors. Enjoy the nice report.html :)
+# Introduction
+TL;DR  It is installed on any Linux device in your network. Adapt the configuration-file to your requirements. Start the test procedure. Let it finish. Check the output for errors. Enjoy the nice report.html :+1:
 
 
 ## Privacy concerns
@@ -11,7 +11,7 @@ It runs locally in your network, no data is sent anywhere. Icons come from the i
 
 
 # Getting started
-You are running the script on your Linux desktop, server or SBC, which saves the hassle of copying the files onto the devices you want to test. The bash-script will ping the IP-Address or scan the network. If you set a SUBNET, it will scan for devices on that subnet.   
+You are running the script on your Linux desktop, server or SBC, which saves the hassle of copying the files onto the devices you want to test. The bash-script will ping the IP-Address or scan the local network. If you set a SUBNET, it will scan for devices on that subnet.   
 It will create logins based on the configuration-file and run different tests to see if the board is working properly.  In the event you already have a root-user login, just put your password there instead of the generic 12345678. More information about the configuration you find below.  
 All you need to do is configure the configuration-file, hook up the power and network cable and you are ready for running the test. That's it.
 
@@ -19,13 +19,13 @@ All you need to do is configure the configuration-file, hook up the power and ne
 Download the latest armbian image. We recommend to use .torrent because this does the file integrity check for you automatically.  
 Write the data to the SDcard, find tipps here https://docs.armbian.com/User-Guide_Getting-Started/#how-to-prepare-a-sd-card
 
-Put the SDcard into your device, power it up and let it sit for 2 minutes. The script will display which board gets tested.
+Put the SDcard into your device, power it up and let it sit for 2 minutes, to do the standard initial setup.
 
 
-## Prepare your system**  
+## Prepare your system
 To run the bash-scripts you need 4 small programs, check if they are already installed on your Linux device:  
 `dpkg -l sshpass git iperf3 jq`  
-If the result shows 'ii' at the begin of the line, you have it installed. 
+If the result shows `ii` at the begin of the line, you have it installed. 
 If dpkg-query:  returns with: not found, you can quickly install these small programs:  
 `sudo apt-get install sshpass git iperf3 jq`
 
@@ -40,18 +40,20 @@ if the download is not finished after 1 min, abort with: ctrl + c  and start ove
 2. Edit `lib/configuration.sh`  
 	- change number of passes (optional)
 	- change stress time in seconds (optional)  
+
 What is your device(s) IP-Address or do you have a dedicated subnet for your devices.
 To find the device, login to your router or use this tool http://angryip.org/, to find your boards IP-Address(es).
 	- set IP-Address (HOSTS) or Subnet
 	- set WLAN_SSID and password (2,4 or 5,0GHz)
 	- set BLUEDEV MAC-Address of a Blueooth device (Android phone for example)
 
-How to find the Bluetooth MAC-Address - on your mobile or PC. Put your phones BT to discoverable mode and run:  
+How to find the Bluetooth MAC-Address - on your mobile or Linux device. Put your phones BT to discoverable mode and run:  
 `hcitool scan` 
-on a Linux computer that has BT-Dongle. On an Android device you find the MAC-Address in the phones settings/about the phone/Status.  
+on a Linux computer that has a BT-Dongle. On an Android device you find the MAC-Address in the phones settings/about the phone/Status.  
 
 
 3. Run :+1: :
+The script will display which board gets tested
 ```
 ./go.sh
 ```
@@ -118,9 +120,9 @@ Example of one test cycle:
 
 
 ## To do's:
-[ ] improve errors catching
-[ ] create XML data export for single board and together
-[ ] common data collecting
-[ ] support custom test board https://forum.armbian.com/topic/10841-the-testing-thread
+[ ] improve errors catching  
+[ ] create XML data export for single board and together  
+[ ] common data collecting  
+[ ] support custom test board https://forum.armbian.com/topic/10841-the-testing-thread  
 
 ![Semantic description of image](https://forum.armbian.com/uploads/monthly_2019_09/IMG_0031.thumb.JPG.25382da99ba09c22c27cf8d274141b8b.JPG "Image Title")
