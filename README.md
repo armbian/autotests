@@ -120,9 +120,9 @@ Example of one test cycle:
 
 
 ## To do's:
-[ ] improve errors catching  
-[ ] create XML data export for single board and together  
-[ ] common data collecting  
-[ ] support custom test board https://forum.armbian.com/topic/10841-the-testing-thread  
+- [ ] improve errors catching  
+- [ ] create XML data export for single board and together  
+- [ ] common data collecting  
+- [ ] support custom test board https://forum.armbian.com/topic/10841-the-testing-thread  
 
 ![Semantic description of image](https://forum.armbian.com/uploads/monthly_2019_09/IMG_0031.thumb.JPG.25382da99ba09c22c27cf8d274141b8b.JPG "Image Title")
