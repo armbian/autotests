@@ -65,20 +65,7 @@ It Connects to the host(s) or all Armbian hosts in your subnet and runs the test
 
 Example report:
 
-<html>
-<head><style type=text/css>
-td, tr {
-    border: 1px solid #e0e3e6;
-    padding: 8px;
-}
-table {
-    border-collapse: collapse;
-    background: #f6f8fa;
-}
-
-</style>
-</head>
-<body><table class="TFtable" cellspacing=0 width=100% border=0> <tr><td align=right rowspan=2><img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/hashtag.png></td><td align=center rowspan=2>Board<br>/<br> Cycle</td><td rowspan=2>Version / distribution <br>Kernel / variant</td>
+<table class="TFtable" cellspacing=0 width=100% border=0> <tr><td align=right rowspan=2><img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/hashtag.png></td><td align=center rowspan=2>Board<br>/<br> Cycle</td><td rowspan=2>Version / distribution <br>Kernel / variant</td>
 <td align=center rowspan=1><img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/lan.png><br><small>Lan</small></td><td align=center rowspan=1><img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/wifi.png><br><small>2.4Ghz</small></td><td align=center rowspan=1><img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/wifi.png><br><small>5Ghz</small></td><td align=center rowspan=1><img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/memory.png><br><small>memory</small></td><td align=center rowspan=1><img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/storage.png><br><small>storage</small></td><td align=center rowspan=2><img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/bluetooth.png><br><small>BT</small></td><td align=center rowspan=2><img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/fire.png><br><small>Stress 6s</small></td><td align=center rowspan=2><br><small>DVFS (Mhz)</small></td></tr><tr><td align=middle colspan=3>Iperf send/receive (MBits/s)</td> <td align=middle colspan=2>IO read/write (MBits/s)</td></tr>
 
 <tr><td align=right rowspan=3>&nbsp;1&nbsp;</td> <td colspan=10>Cubietruck ###.###.###.200</td></td></tr><tr> <td align=center>1/2<br><small>19:16:37</small></td> <td>20.02.1 (bionic)<br>Linux 5.4.26-sunxi stable</td><td align=center><small>sun7i-dwmac</small> 550 - 728<br></td><td align=center><small>brcmfmac</small> <br></td><td align=center><img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/na.png></td><td align=center>358 - 342</td><td align=center>388 - 8</td><td align=center><img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/checked.png></td><td align=center><img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/checked.png></td><td align=center>480 - 960</td></tr>
@@ -88,10 +75,7 @@ table {
 <tr><td align=right rowspan=3>&nbsp;2&nbsp;</td> <td colspan=10>Tinkerboard ###.###.###.204</td></td></tr><tr> <td align=center>1/2<br><small>19:25:24</small></td> <td>20.02.1 (bionic)<br>Linux 5.4.20-rockchip stable</td><td align=center><small>rk_gmac-dwmac</small> 941 - 908<br></td><td align=center><small>rtl8723bs</small> 24<br><small>mt7601u</small> 99<br><small>rt2800usb</small> 109<br></td><td align=center><img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/na.png></td><td align=center>696 - 742</td><td align=center>698 - 70</td><td align=center><img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/checked.png></td><td align=center><img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/checked.png></td><td align=center>600 - 1800</td></tr>
 
 <tr> <td align=center>2/2<br><small>19:29:41</small></td> <td>20.02.1 (bionic)<br>Linux 5.4.20-rockchip stable</td><td align=center><small>rk_gmac-dwmac</small> 941 - 906<br></td><td align=center><small>rtl8723bs</small> 3<br><small>mt7601u</small> 105<br><small>rt2800usb</small> 113<br></td><td align=center><img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/na.png></td><td align=center>692 - 740</td><td align=center>731 - 68</td><td align=center><img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/checked.png></td><td align=center><img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/checked.png></td><td align=center>600 - 1800</td></tr>
-</table></body>
-</html>
-
-
+</table>
 
 # Which tests are executed?
 
