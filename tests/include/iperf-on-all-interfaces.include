@@ -13,7 +13,7 @@ do
 		unset speed_from
 	fi
 	display_alert "... $device" "${speed_from} ${speed_to} MBits/s" "info"
-	TEST_OUTPUT+="<small>$(echo $device | cut -d \( -f2 | cut -d \) -f1)</small><br>${speed_from}${speed_to}<br>"
+	TEST_OUTPUT+="<small>$(echo $device | cut -d \( -f2 | cut -d \) -f1)</small> ${speed_from}${speed_to}<br>"
 
 done
 [[ ${#array[@]} -eq 0 ]] && TEST_OUTPUT="<img width=16 src=https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Philippines_road_sign_R3-1.svg/220px-Philippines_road_sign_R3-1.svg.png>"

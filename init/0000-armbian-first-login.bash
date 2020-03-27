@@ -45,9 +45,7 @@ if [[ $? -eq 1 ]]; then
 	echo "${MAKE_USER}" >> ${SRC}/logs/${USER_HOST}.log
 fi
 
-remote_exec "chsh -s /bin/bash; apt -y purge armbian-config; apt -qq -y install jq stress armbian-config bluez-tools iozone3" &>/dev/null
-#sshpass -p ${PASS_ROOT} ssh ${USER_ROOT}@${USER_HOST} "chsh -s /bin/bash; apt -y purge armbian-config; apt -qq -y install jq stress armbian-config bluez-tools iozone3" &>/dev/null
+remote_exec "chsh -s /bin/bash; apt -y purge armbian-config; apt update; apt -qq -y install jq stress armbian-config bluez-tools iozone3" "-t" &>/dev/null
 
 get_board_data
-display_alert "${x}. $BOARD_NAME $BOARD_KERNEL $BOARD_IMAGE_TYPE" "$(mask_ip "$USER_HOST")" "info"
-
+[[ -n $BOARD_NAME ]] && display_alert "${x}. $BOARD_NAME $BOARD_KERNEL $BOARD_IMAGE_TYPE" "$(mask_ip "$USER_HOST")" "info"

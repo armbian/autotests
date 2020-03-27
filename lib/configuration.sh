@@ -2,6 +2,7 @@
 
 PASSES=5
 STRESS_TIME=100 # seconds
+COMPARE="no" # compare with previous buils
 
 # user
 
