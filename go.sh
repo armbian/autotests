@@ -69,16 +69,28 @@ fi
 hostarray=("${includearray[@]}" "${hostarray[@]}")
 
 # html report header
-HEADER_HTML="<html>\n<head><style>
-td, tr {
-    border: 1px solid #00bfff;
-    padding: 8px;
-}
-table {
-    border-collapse: collapse;
-}
-</style>\n</head>\n<body><table cellspacing=0 width=100% border=1>
-<tr><td align=right rowspan=2>#</td><td align=center rowspan=2>Board<br>/<br>
+HEADER_HTML="<html>\n<head><style type="text/css">
+	.TFtable{
+		width:100%; 
+		border-collapse:collapse; 
+	}
+	.TFtable td{ 
+		padding:10px; border:#e0e3e6 1px solid;
+	}
+	/* provide some minimal visual accomodation for IE8 and below */
+	.TFtable tr{
+		background: #b8d1f3;
+	}
+	/*  Define the background color for all the ODD background rows  */
+	.TFtable tr:nth-child(odd){ 
+		background: #f6f8fa;
+	}
+	/*  Define the background color for all the EVEN background rows  */
+	.TFtable tr:nth-child(even){
+		background: #ffffff;
+	}
+</style>\n</head>\n<body><table class=\"TFtable\" cellspacing=0 width=100% border=0>
+<tr><td align=right rowspan=2><img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/hashtag.png></td><td align=center rowspan=2>Board<br>/<br>
 Cycle</td><td rowspan=2>Version / distribution <br>Kernel / variant</td>\n"
 
 
