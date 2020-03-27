@@ -2,7 +2,7 @@
 source $SRC/lib/functions.sh
 
 TEST_TITLE="memory"
-TEST_ICON=""
+TEST_ICON="<img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/memory.png>"
 [[ $DRY_RUN == true ]] && return 0
 
 display_alert "$(basename $BASH_SOURCE)" "$(date  +%R:%S)" "info"
