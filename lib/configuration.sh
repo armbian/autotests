@@ -31,3 +31,6 @@ WLAN_ID_50=""
 WLAN_PASS_50=""
 
 BLUEDEV=""		# MAC address of your BT device, usually phone which is near by testing devices to make a ping
+
+UPLOAD_SERVER=""			# server for report upload
+UPLOAD_LOCATION=""			# location on that server

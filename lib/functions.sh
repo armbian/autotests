@@ -13,7 +13,7 @@
 
 function mask_ip(){
 
-	echo $1 | sed -r 's!/.*!!; s!.*\.!!' | awk '{print "###.###.###."$1}'
+	echo $1 | cut -d . -f 3,4
 
 }
 
@@ -49,6 +49,8 @@ function get_board_data(){
 	BOARD_VERSION=$(echo -e "$BOARD_DATA" | grep VERSION | head -1 | cut -d "=" -f2)
 	BOARD_DISTRIBUTION_CODENAME=$(echo -e "$BOARD_DATA" | grep DISTRIBUTION_CODENAME | head -1 | cut -d "=" -f2)
 	BOARD_IMAGE_TYPE=$(echo -e "$BOARD_DATA" | grep IMAGE_TYPE | head -1 | cut -d "=" -f2)
+	BOARD_LINUXFAMILY=$(echo -e "$BOARD_DATA" | grep LINUXFAMILY | head -1 | cut -d "=" -f2)
+	BOARD_BRANCH=$(echo -e "$BOARD_DATA" | grep BRANCH | head -1 | cut -d "=" -f2)
 
 }
 
@@ -93,28 +95,23 @@ display_alert()
 
 	case $3 in
 		err)
-		echo -e "[\e[0;31m err. \x1B[0m] $1 $tmp" | tee -a ${SRC}/logs/${USER_HOST}.log
-		echo "$(date  +%R:%S) $1" >> ${SRC}/logs/${USER_HOST}.txt
+		echo -e "[\e[0;31m err. \x1B[0m] $1 $tmp" | tee -a ${SRC}/logs/${REPORT}-$(mask_ip "$USER_HOST").log
 		;;
 
 		wrn)
-		echo -e "[\e[0;35m warn \x1B[0m] $1 $tmp" | tee -a ${SRC}/logs/${USER_HOST}.log
-		echo "$(date  +%R:%S) $1" >> ${SRC}/logs/${USER_HOST}.txt
+		echo -e "[\e[0;35m warn \x1B[0m] $1 $tmp" | tee -a ${SRC}/logs/${REPORT}-$(mask_ip "$USER_HOST").log
 		;;
 
 		ext)
-		echo -e "[\e[0;32m o.k. \x1B[0m] \e[1;32m$1\x1B[0m $tmp" | tee -a ${SRC}/logs/${USER_HOST}.log
-		echo "$(date  +%R:%S) $1" >> ${SRC}/logs/${USER_HOST}.txt
+		echo -e "[\e[0;32m o.k. \x1B[0m] \e[1;32m$1\x1B[0m $tmp" | tee -a ${SRC}/logs/${REPORT}-$(mask_ip "$USER_HOST").log
 		;;
 
 		info)
-		echo -e "[\e[0;32m o.k. \x1B[0m] $1 $tmp" | tee -a ${SRC}/logs/${USER_HOST}.log
-		echo "$(date  +%R:%S) $1" >> ${SRC}/logs/${USER_HOST}.txt
+		echo -e "[\e[0;32m o.k. \x1B[0m] $1 $tmp" | tee -a ${SRC}/logs/${REPORT}-$(mask_ip "$USER_HOST").log
 		;;
 
 		*)
-		echo -e "[\e[0;32m .... \x1B[0m] $1 $tmp" | tee -a ${SRC}/logs/${USER_HOST}.log
-		echo "$(date  +%R:%S) $1" >> ${SRC}/logs/${USER_HOST}.txt
+		echo -e "[\e[0;32m .... \x1B[0m] $1 $tmp" | tee -a ${SRC}/logs/${REPORT}-$(mask_ip "$USER_HOST").log
 		;;
 	esac
 }

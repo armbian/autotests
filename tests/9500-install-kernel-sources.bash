@@ -7,11 +7,46 @@ TEST_ICON="<img width=20 src=https://raw.githubusercontent.com/armbian/autotests
 
 display_alert "$(basename $BASH_SOURCE)" "${BOARD_NAME}" "info"
 
-remote_exec "armbian-config main=Software selection=Source_install" "-t" &>/dev/null
-if [[ $(remote_exec "[[ -d /usr/src/linux-source-\$(uname -r) ]] && echo \"OK\"") == "OK" ]]; then
+unset PREVIOUSLY_TEST
+
+function run_source_tests
+{
+	# clean before
+	display_alert "... Installing kernel sources" "$(date  +%R:%S)" "info"
+	remote_exec "armbian-config main=Software selection=Source_remove" "-t" &>/dev/null
+	remote_exec "armbian-config main=Software selection=Source_install" "-t" &>/dev/null
+	TEST_RESOULTS=$(remote_exec "[[ -d /usr/src/linux-source-\$(uname -r) ]] && echo \"OK\"")
+
+	# save values to array
+	myfambran+=( "${BOARD_LINUXFAMILY}-${BOARD_BRANCH} ${TEST_RESOULTS}" )
+}
+
+unset elementfound
+# check if we already tested this on some other board
+if (( ${#myfambran[@]} )); then
+
+	for each in "${myfambran[@]}"
+	do
+		if [[ " $each " =~ " ${BOARD_LINUXFAMILY}-${BOARD_BRANCH} " ]]; then
+			TEST_RESOULTS=$(echo $each | awk '{print $2}')
+			elementfound=true
+			break
+		fi
+	done
+	# run only if not already in the base
+	[[ ! $elementfound ]] && run_source_tests
+else
+	# if this is the first time
+	run_source_tests
+fi
+
+if [[ ${TEST_RESOULTS} == "OK" ]]; then
 	display_alert "Correct sources were installed" "" "info"
 	TEST_OUTPUT="<img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/checked.png>"
 	else
-	display_alert "Wrong sources were installed" "" "err"
+	display_alert "Wrong sources $(remote_exec "ls -1 /usr/src/ | grep linux-source") were installed" "" "err"
 	TEST_OUTPUT="<img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/error.png>"
 fi
+
+# clean after
+remote_exec "armbian-config main=Software selection=Source_remove" "-t" &>/dev/null

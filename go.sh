@@ -10,7 +10,7 @@
 #
 
 
-apt install -y -qq jq expect sshpass nmap &>/dev/null
+sudo apt install -y -qq jq expect sshpass nmap &>/dev/null
 
 
 #
@@ -39,7 +39,10 @@ START=$(date +%s)
 SRC="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 
 # report file name
-REPORT="$(date +%Y%m%d%H%M%S)"
+REPORT="$(date +%Y-%m-%d_%H.%M.%S)"
+
+# array declaration for storing tested families and branches
+myfambran=()
 
 # load user configuration
 source userconfig/configuration.sh
@@ -68,20 +71,6 @@ fi
 # merge HOSTS/SUBNET with INCLUDE
 hostarray=("${includearray[@]}" "${hostarray[@]}")
 
-# html report header
-HEADER_HTML="<html>\n<head><style type="text/css">
-td, tr {
-    border: 1px solid #e0e3e6;
-    padding: 8px;
-}
-table {
-    border-collapse: collapse;
-    background: #f6f8fa;
-}
-</style>\n</head>\n<body><table class=\"TFtable\" cellspacing=0 width=100% border=0>
-<tr><td align=right rowspan=2><img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/hashtag.png></td><td align=center rowspan=2>Board<br>/<br>
-Cycle</td><td rowspan=2>Version / distribution <br>Kernel / variant</td>\n"
-
 
 # cycle test cases and make a header row
 #
@@ -106,7 +95,22 @@ do
 	fi
 
 done
-HEADER_HTML+="</tr><tr><td align=middle colspan=3>Iperf send/receive (MBits/s)</td>
+
+# html report header
+HEAD_HTML="<html>\n<head><style type="text/css">
+td, tr {
+    border: 1px solid #e0e3e6;
+    padding: 4px;
+}
+table {
+    border-collapse: collapse;
+    background: #f6f8fa;
+}
+</style>\n</head>\n<body><h1>Report ${REPORT}</h1><table class=\"TFtable\" cellspacing=0 width=100% border=0>
+<tr><td align=right rowspan=2><img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/hashtag.png></td><td align=center colspan=2>Board</td>\n"
+
+
+HEADER_HTML="${HEAD_HTML}${HEADER_HTML}</tr><tr><td>Cycle</td><td>Version & kernel</td><td align=middle colspan=3>Iperf send/receive (MBits/s)</td>
 <td align=middle colspan=2>IO read/write (MBits/s)</td></tr>\n"
 unset DRY_RUN
 
@@ -177,3 +181,12 @@ DIFF=$(diff --suppress-common-lines ${SRC}/reports/data.in ${SRC}/reports/data.o
 
 # Show script run duration
 echo "This whole procedure took "$((($(date +%s) - $START)/60))" minutes".
+
+if [[ -n $UPLOAD_SERVER && -n $UPLOAD_LOCATION ]]; then
+
+	# uload report
+	rsync -arP --delete ${SRC}/reports/${REPORT}.html -e 'ssh -p 22' ${UPLOAD_SERVER}:${UPLOAD_LOCATION}
+	# set link to latest
+	ssh ${UPLOAD_SERVER} "cd ${UPLOAD_LOCATION} ; ln -sf ${REPORT}.html latest.html"
+
+fi
