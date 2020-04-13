@@ -1,8 +1,9 @@
 # configuration
 
 PASSES=5
-STRESS_TIME=100 # seconds
+SBCBENCHPASS=${PASSES}	# sbc-bench will run on each cycle by default, set to 1 to run only on first
 COMPARE="no" # compare with previous buils
+PARALLEL="no" # make tests in parallel
 
 # user
 

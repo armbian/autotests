@@ -25,12 +25,18 @@ function mask_ip(){
 #
 function remote_exec(){
 
+	if [[ -z $3 ]]; then
+		local TIMEOUT=30m
+	else
+		local TIMEOUT=$3
+	fi
+
 	f=0;
 	while ! nc -zvw3 $USER_HOST 22 &>/dev/null
 	do
 		sleep 1; f=$(( $f + 1 )); [[ $f -gt 5 ]] && return 1
 	done
-	[[ $? -eq 0 ]] && sshpass -p ${PASS_ROOT} ssh ${2} ${USER_ROOT}@${USER_HOST} "${1}" 2> /dev/null
+	[[ $? -eq 0 ]] && timeout $TIMEOUT sshpass -p ${PASS_ROOT} ssh ${2} ${USER_ROOT}@${USER_HOST} "${1}" 2> /dev/null
 
 }
 
@@ -40,18 +46,23 @@ function remote_exec(){
 # Get board data
 #
 function get_board_data(){
-
+	local UptimeString=$(remote_exec "uptime")
+	local UPT1=${UptimeString#*'up '}
+	local UPT2=${UPT1%'user'*}
+	local time=${UPT2%','*}
+	BOARD_UPTIME=${time//','}
 	BOARD_DATA=$(remote_exec "cat /etc/armbian-release")
 	BOARD_KERNEL=$(remote_exec "uname -sr")
 	echo -e "$BOARD_DATA" >> ${SRC}/logs/${USER_HOST}.txt 2>&1
+	BOARD_BOARD=$(echo -e "$BOARD_DATA" | grep -w BOARD | sed 's/\"//g' | cut -d "=" -f2)
 	BOARD_NAME=$(echo -e "$BOARD_DATA" | grep BOARD_NAME | sed 's/\"//g' | cut -d "=" -f2)
 	BOARD_URL="https://www.armbian.com/"$(echo -e "$BOARD_DATA" | grep BOARD | head -1 | cut -d "=" -f2)
 	BOARD_VERSION=$(echo -e "$BOARD_DATA" | grep VERSION | head -1 | cut -d "=" -f2)
 	BOARD_DISTRIBUTION_CODENAME=$(echo -e "$BOARD_DATA" | grep DISTRIBUTION_CODENAME | head -1 | cut -d "=" -f2)
 	BOARD_IMAGE_TYPE=$(echo -e "$BOARD_DATA" | grep IMAGE_TYPE | head -1 | cut -d "=" -f2)
 	BOARD_LINUXFAMILY=$(echo -e "$BOARD_DATA" | grep LINUXFAMILY | head -1 | cut -d "=" -f2)
-	BOARD_BRANCH=$(echo -e "$BOARD_DATA" | grep BRANCH | head -1 | cut -d "=" -f2)
-
+	#BOARD_BRANCH=$(echo -e "$BOARD_DATA" | grep BRANCH | head -1 | cut -d "=" -f2)
+	BOARD_BRANCH=$(remote_exec "[[ -n $(cat /etc/apt/sources.list.d/armbian.list 2> /dev/null | grep apt) ]] && && echo 'stable' || echo 'nightly')")
 }
 
 
@@ -122,12 +133,16 @@ function wait_for_board
 
 		# wait for a board for a while
 		i=1
-		while ! ping -c1 $USER_HOST &>/dev/null; do 
+		while ! ping -c1 $USER_HOST &>/dev/null; do
 			display_alert "Ping $USER_HOST failed $i" "$(date  +%R:%S)" "info"
 			sleep 10
 			i=$(( $i + 1 ))
 			# give up after 50s
-			[[ $i -gt 5 ]] && false && break
+			if [[ $i -gt 5 ]]; then
+				display_alert "Ping gave up" "$(date  +%R:%S)" "err"
+				return 1
+				break
+			fi
 		done
 
 		display_alert "Host $(mask_ip "$USER_HOST") found" "Run $r out of ${PASSES}" "info";
@@ -158,7 +173,6 @@ while [ $r -le ${PASSES} ]
 
 		# wait until you get ping and sshd response
 		wait_for_board
-
 		# show error that we can't connect to the hosts sshd
 		if [[ $? -ne 0 ]]; then
 
@@ -174,10 +188,17 @@ while [ $r -le ${PASSES} ]
 			get_board_data
 
 			# construct HTML for report
-			HEADER_HTML+="\n<tr>"$( [[ ${r} -eq 1 ]] && \
-			echo "<td align=right rowspan=$((PASSES+1))>&nbsp;$((x+1))&nbsp;</td>\
-			<td colspan=$((COLOUMB+2))>${BOARD_NAME} $(mask_ip "$USER_HOST")</td></td></tr><tr>")"\
-			<td align=center>$r/${PASSES}<br><small>$(date  +%R:%S)</small></td>\
+			BODY_HTML+="<tr>"$( [[ ${r} -eq 1 ]] && \
+			echo "\n\t<td align=right rowspan=$((PASSES+1))>&nbsp;$((x+1))&nbsp;</td>\
+			<td colspan=2>${BOARD_NAME} $(mask_ip "$USER_HOST") Uptime: ${BOARD_UPTIME}</td>\
+			<td colspan=3 align=center>MBits/s</td>\
+			<td colspan=2 align=center>MB/s</td>\
+			<td colspan=2 align=center>16 byte</td>\
+			<td align=center>°C</td>\
+			<td align=center>Mhz</td>\
+			<td colspan=$((COLOUMB-9))></td>\n\
+			</tr>\n<tr>")"\
+			\n\t<td align=center>$r/${PASSES}<br><small>$(date  +%R:%S)</small></td>\
 			<td>${BOARD_VERSION} (${BOARD_DISTRIBUTION_CODENAME})<br>${BOARD_KERNEL} ${BOARD_IMAGE_TYPE}</td>"
 
 			# run tests
@@ -186,14 +207,16 @@ while [ $r -le ${PASSES} ]
 				unset TEST_OUTPUT
 				DATA_ALIGN="center"
 				. $u
-				[[ $TEST_SKIP != "true" ]] && HEADER_HTML+="<td align=$DATA_ALIGN>$TEST_OUTPUT</td>"
+				[[ $TEST_SKIP != "true" ]] && BODY_HTML+="\t<td align=$DATA_ALIGN>$TEST_OUTPUT</td>"
 				unset TEST_SKIP
 			done
-			HEADER_HTML+="</tr>\n"
+			BODY_HTML+="</tr>\n"
 
 	fi
 
 	r=$(( $r + 1 ))
 
 done
+# write board report
+echo -e $BODY_HTML >> ${SRC}/logs/${BOARD_BOARD}-$(mask_ip "$USER_HOST").html
 }

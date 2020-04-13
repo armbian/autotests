@@ -2,6 +2,12 @@
 
 source $SRC/lib/functions.sh
 
+display_alert "${x}. Trying" "$(date  +%R:%S) - $(mask_ip "$USER_HOST")" "info"
+
+
+timeout 2m ping -c1 $USER_HOST &>/dev/null
+if [[ $? -eq 0 ]]; then
+
 #display_alert "$(basename $BASH_SOURCE)" "$(date  +%R:%S)" "info"
 ssh-keygen -qf "$HOME/.ssh/known_hosts" -R "${USER_HOST}" > /dev/null 2>&1
 sshpass -p 1234 ssh -o "StrictHostKeyChecking=accept-new" ${USER_ROOT}@${USER_HOST} "\x03" &>/dev/null
@@ -45,7 +51,9 @@ if [[ $? -eq 1 ]]; then
 	echo "${MAKE_USER}" >> ${SRC}/logs/${USER_HOST}.log
 fi
 
-remote_exec "chsh -s /bin/bash; apt -y purge armbian-config; apt update; apt -qq -y install jq stress armbian-config bluez-tools iozone3" "-t" &>/dev/null
+remote_exec "chsh -s /bin/bash; apt -y purge armbian-config; apt update; apt -qq -y install jq stress armbian-config bluez-tools iozone3" "-t" "10m" &>/dev/null
+remote_exec "[[ ! -f /usr/local/bin/sbc-bench ]] && wget -q -O /usr/local/bin/sbc-bench https://raw.githubusercontent.com/ThomasKaiser/sbc-bench/master/sbc-bench.sh; chmod +x /usr/local/bin/sbc-bench" "-t" "10m" &>/dev/null
 
 get_board_data
-[[ -n $BOARD_NAME ]] && display_alert "${x}. $BOARD_NAME $BOARD_KERNEL $BOARD_IMAGE_TYPE" "$(mask_ip "$USER_HOST")" "info"
+[[ -n $BOARD_NAME ]] && display_alert "${x}. $BOARD_NAME $BOARD_KERNEL $BOARD_IMAGE_TYPE" "$(date  +%R:%S) - $(mask_ip "$USER_HOST") Uptime: $BOARD_UPTIME" "info"
+fi

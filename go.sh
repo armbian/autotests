@@ -43,6 +43,8 @@ REPORT="$(date +%Y-%m-%d_%H.%M.%S)"
 
 # array declaration for storing tested families and branches
 myfambran=()
+# store pids in here
+mytestids=()
 
 # load user configuration
 source userconfig/configuration.sh
@@ -106,25 +108,25 @@ table {
     border-collapse: collapse;
     background: #f6f8fa;
 }
-</style>\n</head>\n<body><h1>Report ${REPORT}</h1><table class=\"TFtable\" cellspacing=0 width=100% border=0>
+</style><meta charset=\"UTF-8\">\n</head>\n<body><h1>Report ${REPORT}</h1><table class=\"TFtable\" cellspacing=0 width=100% border=0>
 <tr><td align=right rowspan=2><img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/hashtag.png></td><td align=center colspan=2>Board</td>\n"
 
 
-HEADER_HTML="${HEAD_HTML}${HEADER_HTML}</tr><tr><td>Cycle</td><td>Version & kernel</td><td align=middle colspan=3>Iperf send/receive (MBits/s)</td>
-<td align=middle colspan=2>IO read/write (MBits/s)</td></tr>\n"
+HEADER_HTML="${HEAD_HTML}${HEADER_HTML}</tr><tr><td>Cycle</td><td>Version & kernel</td><td align=middle colspan=3>Iperf send/receive</td>
+<td align=middle>copy / set</td><td align=middle>read / write</td></tr>\n"
 unset DRY_RUN
 
 
 # Read cached database from previous succesfull test run. Display / log error if this run is different.
 # Some host might not returned after the test cycle
 #
-i=0
-while IFS="\n" read -r line; do
-
-	eval "declare -a a$i=($line)"
-	i=$((i+1))
-
-done < ${SRC}/reports/data.in
+if [[ -f ${SRC}/reports/data.in ]]; then
+	i=0
+	while IFS="\n" read -r line; do
+		eval "declare -a a$i=($line)"
+		i=$((i+1))
+	done < ${SRC}/reports/data.in
+fi
 
 
 # Cycle hosts and see if they are alive, login/create username 
@@ -147,12 +149,12 @@ for USER_HOST in "${hostarray[@]}"; do
 			display_alert "${x}. ${!varb} was expected on $(mask_ip "${!vara}")" "$(date  +%R:%S)" "err"
 		fi
 
-		# always switch to stable build from repository if not already there
-		if [[ -n "$BOARD_IMAGE_TYPE" && "$BOARD_IMAGE_TYPE" != stable ]]; then
+		# always switch to stable build, current branch from repository if not already there
+		if [[ -n "$BOARD_IMAGE_TYPE" && "$BOARD_IMAGE_TYPE" != stable && BOARD_BRANCH != current ]]; then
 
-			display_alert "Switch to stable builds" "$(date  +%R:%S)" "wrn"
+			display_alert "Switch to stable builds, current branch" "$(date  +%R:%S)" "wrn"
 			remote_exec "apt update; apt -y -qq install armbian-config; \
-			LANG=C armbian-config main=System selection=Stable; reboot" "-t" &>/dev/null
+			LANG=C armbian-config main=System selection=Stable branch=current; reboot" "-t" &>/dev/null
 
 		fi
 		x=$((x+1))
@@ -165,14 +167,43 @@ done
 x=0
 for USER_HOST in "${hostarray[@]}"; do
 
-	run_tests
-	[[ $? -ne 0 ]] && display_alert "Host failed" "$(mask_ip "$USER_HOST")" "err"
+	if [[ $PARALLEL == "yes" ]]; then
+		run_tests &
+	else
+		run_tests
+	fi
+	mytestids+=($!)
+	#[[ $? -ne 0 ]] && display_alert "Host failed" "$(mask_ip "$USER_HOST")" "err"
 	x=$((x+1))
 
 done
 
+function disaster-condition
+{
+	counter=0
+	for i in "${mytestids[@]}"
+	do
+		kill -0 $i > /dev/null 2>&1;
+		if [[ $? -eq 0 ]]; then
+			((counter++))
+		else
+			mytestids=( "${mytestids[@]/$i}" )
+		fi
+	done
+	[[ $counter -eq 0 ]] && return 0
+}
+
+while :
+do
+	echo "Tests running in the background ..."
+	sleep 10
+	if (disaster-condition)
+		then break
+	fi
+done
+
 # close HTML file
-HEADER_HTML+="</table></body>\n</html>\n"
+HEADER_HTML+="$(cat ${SRC}/logs/*.html)</table></body>\n</html>\n"
 echo -e $HEADER_HTML >> ${SRC}/reports/${REPORT}.html
 
 # make a diff between current and previous board list

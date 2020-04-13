@@ -1,8 +1,0 @@
-#!/bin/bash
-source $SRC/lib/functions.sh
-
-TEST_TITLE="7z bench"
-[[ $DRY_RUN == true ]] && return 0
-
-display_alert "$(basename $BASH_SOURCE)" "${BOARD_NAMES[$x]} @ ${USER_HOST}" "info"
-remote_exec "armbianmonitor -z" >> ${SRC}/logs/${USER_HOST}.log | tee -a ${SRC}/logs/${USER_HOST}.txt
