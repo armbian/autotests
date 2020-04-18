@@ -1,7 +1,7 @@
 #!/bin/bash
 source $SRC/lib/functions.sh
 
-TEST_TITLE="AES-256 16byte"
+TEST_TITLE="AES-256"
 TEST_ICON="<img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/ssl.png>"
 [[ $DRY_RUN == true ]] && return 0
 

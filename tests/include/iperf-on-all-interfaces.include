@@ -1,9 +1,19 @@
 #!/bin/bash
 source $SRC/lib/functions.sh
 
+# we have to run one iperf at once
+while :
+do
+	if [[ ! -f $SRC/logs/armbian-iperf ]]; then
+		break
+	fi
+	sleep 30
+done
+
+touch $SRC/logs/armbian-iperf
 for u in "${array[@]}"
 do
-	
+
 	device=$(remote_exec "nmcli | awk -vRS='connected' '/$u/{print}' | head -3 | tail -2  | sed 'N;s/\n/ /' | tr -d '\011' | sed 's/..:..:..:..:..:.., //' | sed 's/, hw, mtu [0-9][0-9][0-9][0-9]//'")
 	speed_to=$(echo "$(iperf3 -c ${u} -t 10 -J | jq -r '.intervals' | grep bits_per_second | awk '{print $2}' | awk '{printf("%.0f\n", $1)}' | paste -sd+ | bc) / 20" | bc | awk '{$1/=1000000;printf "%.0f\n",$1}')
 	if [[ $device == *ethernet* ]]; then
@@ -19,3 +29,4 @@ done
 [[ ${#array[@]} -eq 0 ]] && TEST_OUTPUT="<img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/na.png>"
 sleep 1
 remote_exec "pkill -F /var/run/iperf3"
+rm -f $SRC/logs/armbian-iperf

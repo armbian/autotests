@@ -63,7 +63,8 @@ rm -rf ${SRC}/logs/* ${SRC}/reports/data.out
 
 if [[ -n $SUBNET ]]; then # scan subnet if SUBNET is defined
 	readarray -t hostarray < <(nmap $HOST_EXCLUDE --open -sn ${SUBNET} 2> /dev/null \
-	| grep "ssh\|Nmap scan report" | grep -v "gateway" | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}')
+	| grep "ssh\|Nmap scan report" | grep -v "gateway" \
+	| grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}')
 elif [[ -n $HOSTS ]]; then # otherwise read comma delimited IP address from HOSTS
 	IFS=', ' read -r -a hostarray <<< "$HOSTS"
 else # otherwise stops with an error
@@ -72,7 +73,6 @@ fi
 
 # merge HOSTS/SUBNET with INCLUDE
 hostarray=("${includearray[@]}" "${hostarray[@]}")
-
 
 # cycle test cases and make a header row
 #
@@ -99,20 +99,23 @@ do
 done
 
 # html report header
-HEAD_HTML="<html>\n<head><style type="text/css">
-td, tr {
-    border: 1px solid #e0e3e6;
-    padding: 4px;
-}
-table {
-    border-collapse: collapse;
-    background: #f6f8fa;
-}
-</style><meta charset=\"UTF-8\">\n</head>\n<body><h1>Report ${REPORT}</h1><table class=\"TFtable\" cellspacing=0 width=100% border=0>
-<tr><td align=right rowspan=2><img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/hashtag.png></td><td align=center colspan=2>Board</td>\n"
+HEAD_HTML="<html>\n<head>\n<style type=\"text/css\">
+\ntd, tr {
+\n    border: 1px solid #e0e3e6;
+\n    padding: 8px;
+\n}
+\ntable {
+\n    border-collapse: collapse;
+\n    background: #f6f8fa;
+\n}
+\n</style>\n<meta charset=\"UTF-8\">\n</head>\n<body><h1>Report ${REPORT}</h1>\
+\n<table class=\"TFtable\" cellspacing=0 width=100% border=0>
+\n<tr><td align=right rowspan=2>\
+<img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/hashtag.png>\
+</td><td align=center colspan=2>Board</td>\n"
 
-
-HEADER_HTML="${HEAD_HTML}${HEADER_HTML}</tr><tr><td>Cycle</td><td>Version & kernel</td><td align=middle colspan=3>Iperf send/receive</td>
+HEADER_HTML="${HEAD_HTML}${HEADER_HTML}</tr>\
+<tr><td>Cycle</td><td>Version & kernel</td><td align=middle colspan=3>Iperf send/receive</td>
 <td align=middle>copy / set</td><td align=middle>read / write</td></tr>\n"
 unset DRY_RUN
 
@@ -203,7 +206,7 @@ do
 done
 
 # close HTML file
-HEADER_HTML+="$(cat ${SRC}/logs/*.html)</table></body>\n</html>\n"
+HEADER_HTML+="$(ls -v ${SRC}/logs/*.html | xargs cat)</table></body>\n</html>\n"
 echo -e $HEADER_HTML >> ${SRC}/reports/${REPORT}.html
 
 # make a diff between current and previous board list

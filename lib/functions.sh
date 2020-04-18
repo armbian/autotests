@@ -26,7 +26,7 @@ function mask_ip(){
 function remote_exec(){
 
 	if [[ -z $3 ]]; then
-		local TIMEOUT=30m
+		local TIMEOUT=60m
 	else
 		local TIMEOUT=$3
 	fi
@@ -218,5 +218,5 @@ while [ $r -le ${PASSES} ]
 
 done
 # write board report
-echo -e $BODY_HTML >> ${SRC}/logs/${BOARD_BOARD}-$(mask_ip "$USER_HOST").html
+echo -e $BODY_HTML >> ${SRC}/logs/${x}-${BOARD_BOARD}-$(mask_ip "$USER_HOST").html
 }

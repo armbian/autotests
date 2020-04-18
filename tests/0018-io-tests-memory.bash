@@ -9,9 +9,9 @@ display_alert "$(basename $BASH_SOURCE)" "$(date  +%R:%S)" "info"
 
 if [[ "$r" -le "${SBCBENCHPASS}" ]]; then
 	display_alert "This will take some time ..." "Please wait!" "info"
-	GETTEMP=$(remote_exec "rm -f screenlog.0; screen -dmSL gettemp armbianmonitor -m")
-	#SBCBENCH=$(remote_exec "cat bench")
-	SBCBENCH=$(remote_exec "sbc-bench" "-t" "45m")
+	#GETTEMP=$(remote_exec "rm -f screenlog.0; screen -dmSL gettemp armbianmonitor -m")
+	SBCBENCH=$(remote_exec "cat bench")
+	#SBCBENCH=$(remote_exec "sbc-bench" "-t" "45m")
 		if [[ $? -eq 0 ]]; then
 			MEMCPY=$(while IFS= read -r line; do    echo "$line"; done < <(printf '%s\n' "$SBCBENCH") | grep memcpy | head -1 | cut -d' ' -f2,2 | cut -d'.' -f1)
 			MEMSET=$(while IFS= read -r line; do    echo "$line"; done < <(printf '%s\n' "$SBCBENCH") | grep memset | head -1 | cut -d' ' -f2,2 | cut -d'.' -f1)
