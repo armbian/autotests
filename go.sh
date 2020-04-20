@@ -136,6 +136,7 @@ fi
 # and read /etc/armbian-release and compare with previous run
 
 x=0
+waitlonger=0
 for USER_HOST in "${hostarray[@]}"; do
 
 	readarray -t array < <(find $SRC/init -maxdepth 2 -type f -name '*.bash' | sort)
@@ -158,12 +159,15 @@ for USER_HOST in "${hostarray[@]}"; do
 			display_alert "Switch to stable builds, current branch" "$(date  +%R:%S)" "wrn"
 			remote_exec "apt update; apt -y -qq install armbian-config; \
 			LANG=C armbian-config main=System selection=Stable branch=current; reboot" "-t" &>/dev/null
-
+			waitlonger=60
 		fi
 		x=$((x+1))
 	done
 
 done
+
+# sleep in case upgrade and reboot was done
+sleep $waitlonger
 
 # Cycle boards and run tests
 
