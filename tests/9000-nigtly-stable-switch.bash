@@ -12,19 +12,19 @@ remote_exec "apt update; apt -y purge armbian-config; apt -qq -y install armbian
 case "$r" in
 1)
 	display_alert "Switch to nightly builds, branch current" "................................." "info"
-	remote_exec "armbian-config main=System selection=Nightly branch=current" "-t" &>/dev/null
+	remote_exec "armbian-config main=System selection=Nightly branch=current" "-t" "10m" &>/dev/null
 ;;
 2)
 	display_alert "Switch to nightly builds, branch dev" "................................." "info"
-	remote_exec "armbian-config main=System selection=Nightly branch=dev" "-t" &>/dev/null
+	remote_exec "armbian-config main=System selection=Nightly branch=dev" "-t" "10m" &>/dev/null
 ;;
 9999)
 	display_alert "Switch to stable builds, branch dev" "................................." "info"
-	remote_exec "armbian-config main=System selection=Stable branch=dev" "-t" &>/dev/null
+	remote_exec "armbian-config main=System selection=Stable branch=dev" "-t" "10m" &>/dev/null
 ;;
 *)
 	display_alert "Switch to stable builds, branch current" "................................." "info"
-	remote_exec "armbian-config main=System selection=Stable branch=current" "-t" &>/dev/null
+	remote_exec "armbian-config main=System selection=Stable branch=current" "-t" "10m" &>/dev/null
 ;;
 esac
 sleep 20
