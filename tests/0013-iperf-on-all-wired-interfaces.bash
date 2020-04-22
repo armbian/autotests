@@ -7,7 +7,7 @@ TEST_ICON="<img width=20 src=https://raw.githubusercontent.com/armbian/autotests
 
 display_alert "$(basename $BASH_SOURCE)" "$(date  +%R:%S)" "info"
 
-remote_exec "pkill iperf3;iperf3 -Ds --pidfile /var/run/iperf3"
+remote_exec "pkill iperf3; sleep 2; iperf3 -Ds --pidfile /var/run/iperf3"
 
 readarray -t array < <(get_device "^bond.*|^[e].*|^br.*|^lt.*|^umts.*|^lan.*" "ip")
 
