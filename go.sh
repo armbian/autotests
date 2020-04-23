@@ -154,7 +154,7 @@ for USER_HOST in "${hostarray[@]}"; do
 		fi
 
 		# always switch to stable build, current branch from repository if not already there
-		if [[ -n "$BOARD_IMAGE_TYPE" && "$BOARD_IMAGE_TYPE" != stable && BOARD_BRANCH != current ]]; then
+		if [[ -n "$BOARD_IMAGE_TYPE" && "$BOARD_IMAGE_TYPE" != stable && $BOARD_BRANCH != current && $FRESH != no ]]; then
 
 			display_alert "Switch to stable builds, current branch" "$(date  +%R:%S)" "wrn"
 			remote_exec "apt update; apt -y -qq install armbian-config; \
@@ -173,7 +173,7 @@ sleep $waitlonger
 
 x=0
 for USER_HOST in "${hostarray[@]}"; do
-
+	remote_exec "(sleep 60m; reboot) &" "-t" &>/dev/null # reboots the machine automatically after some time
 	if [[ $PARALLEL == "yes" ]]; then
 		run_tests &
 	else

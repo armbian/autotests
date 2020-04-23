@@ -154,7 +154,7 @@ function wait_for_board
 			sleep 10
 			f=$(( $f + 1 ))
 			[[ $f -gt 4 ]] && false && break
-			display_alert "Probing SSH port on $USER_HOST" "$(date  +%R:%S)" "info"
+			display_alert "Probing SSH port on $USER_HOST" "$f $(date  +%R:%S)" "info"
 		done
 
 }
@@ -177,6 +177,7 @@ while [ $r -le ${PASSES} ]
 		if [[ $? -ne 0 ]]; then
 
 			display_alert "Can't connect. SSH on $USER_HOST is closed" "$(date  +%R:%S)" "err"
+			break
 
 		else
 

@@ -4,6 +4,8 @@ PASSES=5
 SBCBENCHPASS=${PASSES}	# sbc-bench will run on each cycle by default, set to 1 to run only on first
 COMPARE="no" # compare with previous buils
 PARALLEL="no" # make tests in parallel
+FRESH="yes" # switch to fresh upstream at init
+BSPSWITCH="no" # switch between current, dev, nightly
 
 # user
 

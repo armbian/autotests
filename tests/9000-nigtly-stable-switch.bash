@@ -3,7 +3,7 @@ source $SRC/lib/functions.sh
 
 TEST_TITLE="Nightly or stable"
 TEST_SKIP="true"
-[[ $DRY_RUN == true ]] && return 0
+[[ $DRY_RUN == true || $BSPSWITCH == "no" ]] && return 0
 
 display_alert "$(basename $BASH_SOURCE)" "${BOARD_NAME}" "info"
 
