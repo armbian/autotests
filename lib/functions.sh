@@ -165,7 +165,7 @@ function run_tests
 {
 r=1
 i=1
-
+BODY_HTML=""
 SUM=0
 # run board test loop PASSES time
 while [ $r -le ${PASSES} ]
@@ -219,5 +219,5 @@ while [ $r -le ${PASSES} ]
 
 done
 # write board report
-echo -e $BODY_HTML >> ${SRC}/logs/${x}-${BOARD_BOARD}-$(mask_ip "$USER_HOST").html
+echo -e $BODY_HTML > ${SRC}/logs/${x}-${BOARD_BOARD}-$(mask_ip "$USER_HOST").html
 }

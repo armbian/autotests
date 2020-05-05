@@ -40,6 +40,7 @@ SRC="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 
 # report file name
 REPORT="$(date +%Y-%m-%d_%H.%M.%S)"
+REPORT_HTML=$(date "+%d. %b %Y %H:%M UTC")
 
 # array declaration for storing tested families and branches
 myfambran=()
@@ -108,7 +109,7 @@ HEAD_HTML="<html>\n<head>\n<style type=\"text/css\">
 \n    border-collapse: collapse;
 \n    background: #f6f8fa;
 \n}
-\n</style>\n<meta charset=\"UTF-8\">\n</head>\n<body><h1>Report ${REPORT}</h1>\
+\n</style>\n<meta charset=\"UTF-8\">\n</head>\n<body><h1>Report ${REPORT_HTML}</h1>\
 \n<table class=\"TFtable\" cellspacing=0 width=100% border=0>
 \n<tr><td align=right rowspan=2>\
 <img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/hashtag.png>\
