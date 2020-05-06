@@ -51,9 +51,16 @@ if [[ $? -eq 1 ]]; then
 	echo "${MAKE_USER}" >> ${SRC}/logs/${USER_HOST}.log
 fi
 
-remote_exec "chsh -s /bin/bash; apt -y purge armbian-config; apt update; apt -qq -y install jq stress armbian-config bluez-tools iozone3" "-t" "10m" &>/dev/null
+display_alert "Run apt fixes just to make sure" "apt-get -f install"
+remote_exec "apt-get -f install" "-t" "10m" &>/dev/null
+display_alert "Updating packages" "apt update only"
+remote_exec "chsh -s /bin/bash; apt -y purge armbian-config; apt update" "-t" "10m" &>/dev/null
+display_alert "Installing stress, armbian-config, bluez-tools, iozone3 and sbc-bench" "test dependencies"
+remote_exec "apt -qq -y install jq stress armbian-config bluez bluez-tools iozone3" "-t" "10m" &>/dev/null
 remote_exec "[[ ! -f /usr/local/bin/sbc-bench ]] && wget -q -O /usr/local/bin/sbc-bench https://raw.githubusercontent.com/ThomasKaiser/sbc-bench/master/sbc-bench.sh; chmod +x /usr/local/bin/sbc-bench" "-t" "10m" &>/dev/null
 
 get_board_data
-[[ -n $BOARD_NAME ]] && display_alert "${x}. $BOARD_NAME $BOARD_KERNEL $BOARD_IMAGE_TYPE" "$(date  +%R:%S) - $(mask_ip "$USER_HOST") Uptime: $BOARD_UPTIME" "info"
+[[ -n $BOARD_NAME ]] && display_alert "$BOARD_NAME $BOARD_KERNEL $BOARD_UBOOT $BOARD_IMAGE_TYPE" "$(date  +%R:%S) - $(mask_ip "$USER_HOST") Uptime: $BOARD_UPTIME" "info"
+else
+	display_alert "${x}. not accessible - $(mask_ip "$USER_HOST")" "$(date  +%R:%S)" "err"
 fi

@@ -10,4 +10,5 @@ if [[ -n ${SBCBENCHURL} && "$r" -le "${SBCBENCHPASS}" ]]; then
 	TEST_OUTPUT="<a tarbet=_blank href=${SBCBENCHURL}><img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/link.png></a>"
 else
 	TEST_OUTPUT="<img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/na.png>"
+	display_alert "SBC-bench URL" "No data" "wrn"
 fi

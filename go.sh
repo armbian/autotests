@@ -32,6 +32,26 @@ if [[ ! -f userconfig/configuration.sh ]]; then
 
 fi
 
+# Script parameters handling
+while [[ $1 == *=* ]]; do
+	parameter=${1%%=*}
+	value=${1##*=}
+	shift
+	echo "Command line: setting $parameter to ${value:-(empty)}"
+	eval "$parameter=\"$value\""
+	scripted=true
+done
+
+# Display help
+if [[ $1 == "--help" ]]; then
+	echo "Config options:"
+	echo ""
+	echo "DISPLAYHOSTS = yes # displays ip addresses and exit"
+	echo "PREPAREONLY = yes # run only initial board prepare"
+	echo "EMULATED = yes # don't run sbc-bench but use static data for debugging"
+	exit
+fi
+
 # start measuring executing time
 START=$(date +%s)
 
@@ -56,18 +76,17 @@ source lib/functions.sh
 # remove logs each time we ran the script. Need to be changed
 rm -rf ${SRC}/logs/* ${SRC}/reports/data.out
 
-# exclude IP addresses defined in EXCLUDE
-[[ -n $EXCLUDE ]] && HOST_EXCLUDE="--exclude ${EXCLUDE}"
 
-# include IP addresses defined in INCLUDE
-[[ -n $INCLUDE ]] && IFS=', ' read -r -a includearray <<< "$INCLUDE"
-
-if [[ -n $SUBNET ]]; then # scan subnet if SUBNET is defined
+if [[ -n $HOSTS ]]; then # read comma delimited IP address from HOSTS
+	IFS=', ' read -r -a hostarray <<< "$HOSTS"
+elif [[ -n $SUBNET ]]; then # otherwise scan subnet if SUBNET is defined
+	# exclude IP addresses defined in EXCLUDE
+	[[ -n $EXCLUDE ]] && HOST_EXCLUDE="--exclude ${EXCLUDE}"
+	# include IP addresses defined in INCLUDE
+	[[ -n $INCLUDE ]] && IFS=', ' read -r -a includearray <<< "$INCLUDE"
 	readarray -t hostarray < <(nmap $HOST_EXCLUDE --open -sn ${SUBNET} 2> /dev/null \
 	| grep "ssh\|Nmap scan report" | grep -v "gateway" \
 	| grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}')
-elif [[ -n $HOSTS ]]; then # otherwise read comma delimited IP address from HOSTS
-	IFS=', ' read -r -a hostarray <<< "$HOSTS"
 else # otherwise stops with an error
 	echo "\$HOST not defined. Exiting." && exit 1 
 fi
@@ -75,10 +94,37 @@ fi
 # merge HOSTS/SUBNET with INCLUDE
 hostarray=("${includearray[@]}" "${hostarray[@]}")
 
+if [[ $DISPLAYHOSTS == yes ]]; then
+	i=0
+	for each in "${hostarray[@]}"
+	do
+		i=$((i+1))
+		echo "$i. $each"
+	done
+	exit
+fi
+
+echo "Display config options:"
+
+echo ""
+
+echo "PASSES=$PASSES"
+echo "SBCBENCHPASS=$SBCBENCHPASS"
+echo "COMPARE=$COMPARE"
+echo "PARALLEL=$PARALLEL"
+echo "FRESH=$FRESH"
+echo "BSPSWITCH=$BSPSWITCH"
+echo "EMULATED=$EMULATED"
+
+echo ""
+
 # cycle test cases and make a header row
 #
 # when DRY_RUN is set we cycle over test to basic information about tests, but do not run them
 #
+
+echo "Preparing tests"
+
 DRY_RUN=true
 readarray -t array < <(find $SRC/tests -maxdepth 2 -type f -name '*.bash' | sort)
 COLOUMB=0
@@ -94,10 +140,13 @@ do
 			else
 			row=1;
 		fi
+		echo "- $TEST_TITLE"
 		HEADER_HTML+="<td align=center rowspan=$row>$TEST_ICON<br><small>$TEST_TITLE</small></td>"
 	fi
 
 done
+
+echo ""
 
 # html report header
 HEAD_HTML="<html>\n<head>\n<style type=\"text/css\">
@@ -159,13 +208,24 @@ for USER_HOST in "${hostarray[@]}"; do
 
 			display_alert "Switch to stable builds, current branch" "$(date  +%R:%S)" "wrn"
 			remote_exec "apt update; apt -y -qq install armbian-config; \
-			LANG=C armbian-config main=System selection=Stable branch=current; reboot" "-t" &>/dev/null
+			LANG=C armbian-config main=System selection=Stable branch=current" "-t" &>/dev/null
+			# write u-boot
+			root_uuid=$(remote_exec "sed -e 's/^.*root=//' -e 's/ .*$//' < /proc/cmdline")
+			root_partition=$(remote_exec "blkid | tr -d '\":' | grep \"${root_uuid}\" | awk '{print \$1}'")
+			root_partition_device="${root_partition::-2}"
+			remote_exec "[[ -f /usr/lib/u-boot/platform_install.sh ]] && source /usr/lib/u-boot/platform_install.sh && write_uboot_platform \$DIR ${root_partition_device} && reboot" "-t"
 			waitlonger=60
 		fi
 		x=$((x+1))
 	done
 
 done
+
+if [[ $PREPAREONLY == yes ]]; then
+	exit
+fi
+
+echo ""
 
 # sleep in case upgrade and reboot was done
 sleep $waitlonger
@@ -203,8 +263,8 @@ function disaster-condition
 
 while :
 do
-	echo "Tests running in the background ..."
-	sleep 10
+#	echo "Tests running in the background ..."
+#	sleep 10
 	if (disaster-condition)
 		then break
 	fi
@@ -214,9 +274,7 @@ done
 HEADER_HTML+="$(ls -v ${SRC}/logs/*.html | xargs cat)</table></body>\n</html>\n"
 echo -e $HEADER_HTML >> ${SRC}/reports/${REPORT}.html
 
-# make a diff between current and previous board list
-DIFF=$(diff --suppress-common-lines ${SRC}/reports/data.in ${SRC}/reports/data.out | sed 1d)
-[[ -z $DIFF ]] && cp ${SRC}/reports/data.out ${SRC}/reports/data.in
+cp ${SRC}/reports/data.out ${SRC}/reports/data.in
 
 # Show script run duration
 echo "This whole procedure took "$((($(date +%s) - $START)/60))" minutes".

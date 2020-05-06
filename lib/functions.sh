@@ -51,6 +51,10 @@ function get_board_data(){
 	local UPT2=${UPT1%'user'*}
 	local time=${UPT2%','*}
 	BOARD_UPTIME=${time//','}
+	root_uuid=$(remote_exec "sed -e 's/^.*root=//' -e 's/ .*$//' < /proc/cmdline")
+	root_partition=$(remote_exec "blkid | tr -d '\":' | grep \"${root_uuid}\" | awk '{print \$1}'")
+	root_partition_device="${root_partition::-2}"
+	BOARD_UBOOT=$(remote_exec "dd status=none if=${root_partition_device} count=5000 | strings | grep armbian | grep U-Boot | tail -1 | cut -f1 -d\"(\"")
 	BOARD_DATA=$(remote_exec "cat /etc/armbian-release")
 	BOARD_KERNEL=$(remote_exec "uname -sr")
 	echo -e "$BOARD_DATA" >> ${SRC}/logs/${USER_HOST}.txt 2>&1
@@ -200,7 +204,7 @@ while [ $r -le ${PASSES} ]
 			<td colspan=$((COLOUMB-9))></td>\n\
 			</tr>\n<tr>")"\
 			\n\t<td align=center>$r/${PASSES}<br><small>$(date  +%R:%S)</small></td>\
-			<td>${BOARD_VERSION} (${BOARD_DISTRIBUTION_CODENAME})<br>${BOARD_KERNEL} ${BOARD_IMAGE_TYPE}</td>"
+			<td>${BOARD_VERSION} (${BOARD_DISTRIBUTION_CODENAME})<br>${BOARD_KERNEL} ${BOARD_IMAGE_TYPE}<br>${BOARD_UBOOT}</td>"
 
 			# run tests
 			for u in "${array[@]}"

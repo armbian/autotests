@@ -1,0 +1,62 @@
+
+Average load is 0.1 or higher (way too much background activity). Waiting...
+
+System too busy for benchmarking: 15:37:33 up 5 min,  1 user,  load average: 0.85, 0.58, 0.29
+System too busy for benchmarking: 15:37:38 up 6 min,  1 user,  load average: 0.78, 0.57, 0.28
+System too busy for benchmarking: 15:37:43 up 6 min,  1 user,  load average: 0.72, 0.56, 0.28
+System too busy for benchmarking: 15:37:48 up 6 min,  1 user,  load average: 0.66, 0.55, 0.28
+System too busy for benchmarking: 15:37:53 up 6 min,  1 user,  load average: 0.61, 0.55, 0.28
+System too busy for benchmarking: 15:37:58 up 6 min,  1 user,  load average: 0.56, 0.54, 0.28
+System too busy for benchmarking: 15:38:03 up 6 min,  1 user,  load average: 0.52, 0.53, 0.27
+System too busy for benchmarking: 15:38:08 up 6 min,  1 user,  load average: 0.47, 0.52, 0.27
+System too busy for benchmarking: 15:38:13 up 6 min,  1 user,  load average: 0.44, 0.51, 0.27
+System too busy for benchmarking: 15:38:18 up 6 min,  1 user,  load average: 0.48, 0.52, 0.27
+System too busy for benchmarking: 15:38:23 up 6 min,  1 user,  load average: 0.44, 0.51, 0.27
+System too busy for benchmarking: 15:38:28 up 6 min,  1 user,  load average: 0.41, 0.50, 0.27
+System too busy for benchmarking: 15:38:33 up 6 min,  1 user,  load average: 0.37, 0.49, 0.27
+System too busy for benchmarking: 15:38:38 up 7 min,  1 user,  load average: 0.34, 0.48, 0.27
+System too busy for benchmarking: 15:38:43 up 7 min,  1 user,  load average: 0.32, 0.47, 0.27
+System too busy for benchmarking: 15:38:49 up 7 min,  1 user,  load average: 0.29, 0.47, 0.27
+System too busy for benchmarking: 15:38:54 up 7 min,  1 user,  load average: 0.27, 0.46, 0.26
+System too busy for benchmarking: 15:38:59 up 7 min,  1 user,  load average: 0.25, 0.45, 0.26
+System too busy for benchmarking: 15:39:04 up 7 min,  1 user,  load average: 0.23, 0.44, 0.26
+System too busy for benchmarking: 15:39:09 up 7 min,  1 user,  load average: 0.21, 0.44, 0.26
+System too busy for benchmarking: 15:39:14 up 7 min,  1 user,  load average: 0.19, 0.43, 0.26
+System too busy for benchmarking: 15:39:19 up 7 min,  1 user,  load average: 0.17, 0.42, 0.26
+System too busy for benchmarking: 15:39:24 up 7 min,  1 user,  load average: 0.16, 0.41, 0.25
+System too busy for benchmarking: 15:39:29 up 7 min,  1 user,  load average: 0.15, 0.41, 0.25
+System too busy for benchmarking: 15:39:34 up 7 min,  1 user,  load average: 0.14, 0.40, 0.25
+System too busy for benchmarking: 15:39:39 up 8 min,  1 user,  load average: 0.12, 0.39, 0.25
+System too busy for benchmarking: 15:39:44 up 8 min,  1 user,  load average: 0.11, 0.39, 0.25
+System too busy for benchmarking: 15:39:49 up 8 min,  1 user,  load average: 0.10, 0.38, 0.25
+System too busy for benchmarking: 15:39:54 up 8 min,  1 user,  load average: 0.10, 0.37, 0.25
+
+sbc-bench v0.7.2
+
+Installing needed tools. This may take some time... Done.
+Checking cpufreq OPP... Done.
+Executing tinymembench. This will take a long time... Done.
+Executing OpenSSL benchmark. This will take 3 minutes... Done.
+Executing 7-zip benchmark. This will take a long time... Done.
+Checking cpufreq OPP... Done.
+
+ATTENTION: Throttling might have occured. Check the log for details.
+
+Memory performance:
+memcpy: 1183.7 MB/s 
+memset: 3540.0 MB/s 
+
+7-zip total scores (3 consecutive runs): 3599,3595,3580
+
+OpenSSL results:
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-128-cbc      89222.25k   283740.12k   605687.98k   882674.35k  1017255.25k  1028352.68k
+aes-128-cbc      89194.71k   283819.03k   605703.08k   882628.95k  1016941.23k  1026927.27k
+aes-192-cbc      85245.68k   257155.14k   505528.83k   687018.67k   766386.18k   773548.71k
+aes-192-cbc      84817.91k   255692.97k   505445.29k   687310.17k   767003.31k   772532.91k
+aes-256-cbc      82805.36k   237869.06k   443641.26k   578148.69k   633645.74k   638102.19k
+aes-256-cbc      83244.62k   239756.71k   443926.95k   578168.83k   633533.78k   637861.89k
+
+Full results uploaded to http://ix.io/2kTH. Please check the log for anomalies (e.g. swapping
+or throttling happenend) and otherwise share this URL.
+

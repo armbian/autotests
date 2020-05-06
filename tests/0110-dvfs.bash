@@ -13,5 +13,5 @@ minbig='[[ -d /sys/devices/system/cpu/cpu4/cpufreq ]] && echo -n $(bc <<< "scale
 maxbig='[[ -d /sys/devices/system/cpu/cpu4/cpufreq ]] && echo -n $(bc <<< "scale=0;$(cat /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq | head -1)/1000") '
 resoult=$(remote_exec "eval $min; eval $max")
 resoult_big=$(remote_exec "eval $minbig; eval $maxbig")
-[[ -n resoult_big ]] && resoult+="<br>"$resoult_big
+[[ -n $resoult_big ]] && resoult+="<br>"$resoult_big
 [[ -n $resoult ]] && display_alert "... DVFS works" "$resoult Mhz" "info" && TEST_OUTPUT=$resoult

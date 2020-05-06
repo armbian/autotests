@@ -11,4 +11,5 @@ if [[ -n ${GETTEMP} && "$r" -le "${SBCBENCHPASS}" ]]; then
 	TEST_OUTPUT="${GETTEMP}"
 else
 	TEST_OUTPUT="<img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/na.png>"
+	display_alert "Board temperature" "No data" "wrn"
 fi

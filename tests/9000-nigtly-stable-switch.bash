@@ -14,7 +14,7 @@ case "$r" in
 	display_alert "Switch to nightly builds, branch current" "................................." "info"
 	remote_exec "armbian-config main=System selection=Nightly branch=current" "-t" "10m" &>/dev/null
 ;;
-2222)
+22222)
 	display_alert "Switch to nightly builds, branch dev" "................................." "info"
 	remote_exec "armbian-config main=System selection=Nightly branch=dev" "-t" "10m" &>/dev/null
 ;;

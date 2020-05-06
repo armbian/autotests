@@ -30,3 +30,6 @@ done
 sleep 1
 remote_exec "pkill -F /var/run/iperf3"
 rm -f $SRC/logs/armbian-iperf
+
+# remove devices connected in this session
+#remote_exec "find /etc/NetworkManager/system-connections -type f -not -name '$KEEPDEVICE' -delete"

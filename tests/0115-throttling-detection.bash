@@ -7,9 +7,9 @@ TEST_ICON="<img width=20 src=https://raw.githubusercontent.com/armbian/autotests
 
 display_alert "$(basename $BASH_SOURCE)" "$(date  +%R:%S)" "info"
 
-output=$(while IFS= read -r line; do echo "$line"; done < <(printf '%s\n' "$SBCBENCH") | grep "ATTENTION: Throttling")
-if [[ "$r" -le "${SBCBENCHPASS}" && -n $output ]]; then
+if [[ "$r" -le "${SBCBENCHPASS}" && -n "${THROTTLING}" ]]; then
 	TEST_OUTPUT="<img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/exclamation.png>"
 	else
 	TEST_OUTPUT="<img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/na.png>"
+	display_alert "Throttling" "No data" "wrn"
 fi
