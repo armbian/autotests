@@ -49,4 +49,4 @@ if [[ ${TEST_RESOULTS} == "OK" ]]; then
 fi
 
 # clean after
-remote_exec "armbian-config main=Software selection=Source_remove" "-t" &>/dev/null
+#remote_exec "armbian-config main=Software selection=Source_remove" "-t" &>/dev/null

@@ -10,4 +10,8 @@ remote_exec "pkill iperf3; sleep 2; iperf3 -Ds --pidfile /var/run/iperf3"
 
 readarray -t array < <(get_device "^[wr].*" "ip")
 
+if [[ "$FREQ5GHZ" -gt 1 ]]; then
 source $SRC/tests/include/iperf-on-all-interfaces.include
+else
+TEST_OUTPUT="<img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/na.png>"
+fi
