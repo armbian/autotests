@@ -221,6 +221,12 @@ for USER_HOST in "${hostarray[@]}"; do
 
 done
 
+# show diff to previous build
+display_alert "Diff to previous build" "added or removed" "info"
+cat ${SRC}/reports/data.in ${SRC}/reports/data.out | sort | uniq -u
+
+#cp ${SRC}/reports/data.out ${SRC}/reports/data.in
+
 if [[ $PREPAREONLY == yes ]]; then
 	exit
 fi
@@ -273,8 +279,6 @@ done
 # close HTML file
 HEADER_HTML+="$(ls -v ${SRC}/logs/*.html | xargs cat)</table></body>\n</html>\n"
 echo -e $HEADER_HTML >> ${SRC}/reports/${REPORT}.html
-
-cp ${SRC}/reports/data.out ${SRC}/reports/data.in
 
 # Show script run duration
 echo "This whole procedure took "$((($(date +%s) - $START)/60))" minutes".

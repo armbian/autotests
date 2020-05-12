@@ -11,5 +11,4 @@ if [[ "$r" -le "${SBCBENCHPASS}" && -n "${THROTTLING}" ]]; then
 	TEST_OUTPUT="<img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/exclamation.png>"
 	else
 	TEST_OUTPUT="<img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/na.png>"
-	display_alert "Throttling" "No data" "wrn"
 fi

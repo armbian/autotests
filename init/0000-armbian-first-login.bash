@@ -59,6 +59,10 @@ remote_exec "chsh -s /bin/bash; apt -y purge armbian-config; apt update" "-t" "1
 display_alert "Installing stress, armbian-config, bluez-tools, iozone3 and sbc-bench" "test dependencies"
 remote_exec "apt -qq -y install jq stress armbian-config bluez bluez-tools iozone3" "-t" "10m" &>/dev/null
 remote_exec "wget -q -O /usr/local/bin/sbc-bench https://raw.githubusercontent.com/ThomasKaiser/sbc-bench/master/sbc-bench.sh; chmod +x /usr/local/bin/sbc-bench" "-t" "10m" &>/dev/null
+
+# we will not wait for ideal load since load itself is more important than numbers
+remote_exec "sed -i \"s/\tCheckLoad/\t#CheckLoad/\" /usr/local/bin/sbc-bench"
+
 fi
 
 get_board_data
