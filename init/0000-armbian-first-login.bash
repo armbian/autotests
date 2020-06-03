@@ -66,7 +66,7 @@ remote_exec "sed -i \"s/\tCheckLoad/\t#CheckLoad/\" /usr/local/bin/sbc-bench"
 fi
 
 get_board_data
-[[ -n $BOARD_NAME ]] && display_alert "$BOARD_NAME $BOARD_KERNEL $BOARD_UBOOT $BOARD_IMAGE_TYPE" "$(date  +%R:%S) - $(mask_ip "$USER_HOST") Uptime: $BOARD_UPTIME" "info"
+[[ -n $BOARD_NAME ]] && display_alert "$BOARD_NAME $BOARD_KERNEL $BOARD_UBOOT $BOARD_DISTRIBUTION_CODENAME $BOARD_IMAGE_TYPE" "$(date  +%R:%S) - $(mask_ip "$USER_HOST") Uptime: $BOARD_UPTIME" "info"
 else
 	display_alert "${x}. not accessible - $(mask_ip "$USER_HOST")" "$(date  +%R:%S)" "err"
 fi
