@@ -103,7 +103,7 @@ Example report:
 - [x] implement official SBC-bench with access to full logs
 - [ ] improve errors catching  
 - [x] implement iperf queue to prevent colisions on network testing
-- [ ] create XML data export for single board and together  
+- [ ] create JSON data export for single board and together  
 - [ ] common data collecting  
 - [ ] support custom test board https://forum.armbian.com/topic/10841-the-testing-thread  
 
