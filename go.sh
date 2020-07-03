@@ -223,7 +223,8 @@ done
 
 # show diff to previous build
 display_alert "Diff to previous build" "added or removed" "info"
-cat ${SRC}/reports/data.in ${SRC}/reports/data.out | sort | uniq -u
+cat ${SRC}/reports/data.out | cut -d$'"' -f 4 | sed 's/.*/"&"/' | sort | uniq | awk -F"\"" '{print $2}' > ${SRC}/reports/data.out.txt
+cat ${SRC}/reports/data.in ${SRC}/reports/data.out | cut -d$'"' -f 4 | sed 's/.*/"&"/' | sort | uniq | awk -F"\"" '{print $2}' | diff ${SRC}/reports/data.out.txt - | grep ">"
 
 #cp ${SRC}/reports/data.out ${SRC}/reports/data.in
 
