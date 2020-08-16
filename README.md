@@ -35,7 +35,7 @@ cd autotests
 ./go.sh
 ```
  
-2. Edit `lib/configuration.sh`  
+2. Edit `userconfig/configuration.sh`  
 	- change number of passes (optional)
 	- change stress time in seconds (optional)  
 
