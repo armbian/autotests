@@ -10,7 +10,7 @@
 #
 
 
-sudo apt install -y -qq jq expect sshpass nmap &>/dev/null
+sudo apt install -y -qq jq expect sshpass nmap iperf3 &>/dev/null
 
 
 #
@@ -286,7 +286,7 @@ echo "This whole procedure took "$((($(date +%s) - $START)/60))" minutes".
 
 if [[ -n $UPLOAD_SERVER && -n $UPLOAD_LOCATION ]]; then
 
-	# uload report
+	# upload report
 	rsync -arP --delete ${SRC}/reports/${REPORT}.html -e 'ssh -p 22' ${UPLOAD_SERVER}:${UPLOAD_LOCATION}
 	# set link to latest
 	ssh ${UPLOAD_SERVER} "cd ${UPLOAD_LOCATION} ; ln -sf ${REPORT}.html latest.html"

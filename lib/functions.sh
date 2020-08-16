@@ -36,7 +36,7 @@ function remote_exec(){
 	do
 		sleep 1; f=$(( $f + 1 )); [[ $f -gt 5 ]] && return 1
 	done
-	[[ $? -eq 0 ]] && timeout $TIMEOUT sshpass -p ${PASS_ROOT} ssh ${2} ${USER_ROOT}@${USER_HOST} "${1}" 2> /dev/null
+	[[ $? -eq 0 ]] && timeout $TIMEOUT sshpass -p ${PASS_ROOT} ssh -o StrictHostKeyChecking=no ${2} ${USER_ROOT}@${USER_HOST} "${1}" 2> /dev/null
 
 }
 
@@ -50,14 +50,20 @@ function get_board_data(){
 	local UPT1=${UptimeString#*'up '}
 	local UPT2=${UPT1%'user'*}
 	local time=${UPT2%','*}
+
+	BOARD_DATA=$(remote_exec "cat /etc/armbian-release")
+	if [ "$BOARD_DATA" == "" ]; then
+		echo "Remote host is not runnig Armbian. Exiting.."
+		exit
+	fi
+	echo -e "$BOARD_DATA" >> ${SRC}/logs/${USER_HOST}.txt 2>&1
+
 	BOARD_UPTIME=${time//','}
 	root_uuid=$(remote_exec "sed -e 's/^.*root=//' -e 's/ .*$//' < /proc/cmdline")
 	root_partition=$(remote_exec "blkid | tr -d '\":' | grep \"${root_uuid}\" | awk '{print \$1}'")
 	root_partition_device="${root_partition::-2}"
 	BOARD_UBOOT=$(remote_exec "dd status=none if=${root_partition_device} count=5000 | strings | grep armbian | grep U-Boot | tail -1 | cut -f1 -d\"(\"")
-	BOARD_DATA=$(remote_exec "cat /etc/armbian-release")
 	BOARD_KERNEL=$(remote_exec "uname -sr")
-	echo -e "$BOARD_DATA" >> ${SRC}/logs/${USER_HOST}.txt 2>&1
 	BOARD_BOARD=$(echo -e "$BOARD_DATA" | grep -w BOARD | sed 's/\"//g' | cut -d "=" -f2)
 	BOARD_NAME=$(echo -e "$BOARD_DATA" | grep BOARD_NAME | sed 's/\"//g' | cut -d "=" -f2)
 	BOARD_URL="https://www.armbian.com/"$(echo -e "$BOARD_DATA" | grep BOARD | head -1 | cut -d "=" -f2)
