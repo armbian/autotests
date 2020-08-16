@@ -36,7 +36,7 @@ function remote_exec(){
 	do
 		sleep 1; f=$(( $f + 1 )); [[ $f -gt 5 ]] && return 1
 	done
-	[[ $? -eq 0 ]] && timeout $TIMEOUT sshpass -p ${PASS_ROOT} ssh ${2} ${USER_ROOT}@${USER_HOST} "${1}" 2> /dev/null
+	[[ $? -eq 0 ]] && timeout $TIMEOUT sshpass -p ${PASS_ROOT} ssh -o StrictHostKeyChecking=no ${2} ${USER_ROOT}@${USER_HOST} "${1}" 2> /dev/null
 
 }
 
