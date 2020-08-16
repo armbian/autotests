@@ -11,6 +11,36 @@ if [[ $? -eq 0 ]]; then
 #display_alert "$(basename $BASH_SOURCE)" "$(date  +%R:%S)" "info"
 ssh-keygen -qf "$HOME/.ssh/known_hosts" -R "${USER_HOST}" > /dev/null 2>&1
 sshpass -p 1234 ssh -o "StrictHostKeyChecking=accept-new" ${USER_ROOT}@${USER_HOST} "\x03" &>/dev/null
+
+# since 20.08
+if [[ $? -eq 1 ]]; then
+display_alert "Conduct first login steps" "root/${PASS_ROOT} and ${USER_NORMAL}/${PASS_NORMAL}" "info"
+MAKE_USER=$(expect -c "
+        spawn sshpass -p 1234 ssh -o "StrictHostKeyChecking=accept-new" ${USER_ROOT}@${USER_HOST}
+        set timeout 10
+        expect \"New root password:\"
+	send \"${PASS_ROOT}\r\"
+        expect \"Repeat password:\"
+        send \"${PASS_ROOT}\r\"
+        expect \"from your location [Y/n]\"
+        send \"y\"
+	expect \"(eg. your forename):\"
+	send \"${USER_NORMAL}\r\"
+        expect \"Create password:\"
+        send \"${PASS_NORMAL}\r\"
+        expect \"Repeat password:\"
+        send \"${PASS_NORMAL}\r\"
+        expect \"(eg. John Doe):\"
+        send \"${NAME_NORMAL}\r\"
+        expect eof
+        ")
+        # Disable user creation: send \"\x03\"
+        # display output
+        echo "${MAKE_USER}" >> ${SRC}/logs/${USER_HOST}.txt
+        echo "${MAKE_USER}" >> ${SRC}/logs/${USER_HOST}.log
+fi
+
+# before 20.08 
 if [[ $? -eq 1 ]]; then
 	# clean keys
 	# pass user creation to expect
@@ -62,7 +92,8 @@ remote_exec "wget -q -O /usr/local/bin/sbc-bench https://raw.githubusercontent.c
 
 # we will not wait for ideal load since load itself is more important than numbers
 remote_exec "sed -i \"s/\tCheckLoad/\t#CheckLoad/\" /usr/local/bin/sbc-bench"
-
+else
+remote_exec "dpkg --configure -a --force-confold" "-t" "10m" &>/dev/null
 fi
 
 get_board_data

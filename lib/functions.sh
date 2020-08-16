@@ -18,6 +18,17 @@ function mask_ip(){
 }
 
 
+#
+# Write u-boot and reboot
+#
+function write_uboot(){
+	root_uuid=$(remote_exec "sed -e 's/^.*root=//' -e 's/ .*$//' < /proc/cmdline")
+	root_partition=$(remote_exec "blkid | tr -d '\":' | grep \"${root_uuid}\" | awk '{print \$1}'")
+	root_partition_device="${root_partition::-2}"
+	remote_exec "[[ -f /usr/lib/u-boot/platform_install.sh ]] && source /usr/lib/u-boot/platform_install.sh && write_uboot_platform \$DIR ${root_partition_device} && reboot" "-t"
+	waitlonger=60
+}
+
 
 
 #

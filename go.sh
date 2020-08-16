@@ -203,18 +203,21 @@ for USER_HOST in "${hostarray[@]}"; do
 			display_alert "${x}. ${!varb} was expected on $(mask_ip "${!vara}")" "$(date  +%R:%S)" "err"
 		fi
 
-		# always switch to stable build, current branch from repository if not already there
-		if [[ -n "$BOARD_IMAGE_TYPE" && "$BOARD_IMAGE_TYPE" != stable && $BOARD_BRANCH != current && $FRESH != no ]]; then
+		# switch to nightly
+		if [[ $FRESH == nightly ]]; then
+                        display_alert "Switch to nightly builds, current branch" "$(date  +%R:%S)" "wrn"
+                        remote_exec "apt update; apt -y -qq install armbian-config; \
+                        LANG=C armbian-config main=System selection=Nightly branch=$BOARD_BRANCH" "-t" &>/dev/null
+			write_uboot
+		fi
+
+		# switch to stable build, current branch from repository if not already there
+		if [[ -n "$BOARD_IMAGE_TYPE" && "$BOARD_IMAGE_TYPE" != stable && $BOARD_BRANCH != current && $FRESH == yes ]]; then
 
 			display_alert "Switch to stable builds, current branch" "$(date  +%R:%S)" "wrn"
 			remote_exec "apt update; apt -y -qq install armbian-config; \
 			LANG=C armbian-config main=System selection=Stable branch=current" "-t" &>/dev/null
-			# write u-boot
-			root_uuid=$(remote_exec "sed -e 's/^.*root=//' -e 's/ .*$//' < /proc/cmdline")
-			root_partition=$(remote_exec "blkid | tr -d '\":' | grep \"${root_uuid}\" | awk '{print \$1}'")
-			root_partition_device="${root_partition::-2}"
-			remote_exec "[[ -f /usr/lib/u-boot/platform_install.sh ]] && source /usr/lib/u-boot/platform_install.sh && write_uboot_platform \$DIR ${root_partition_device} && reboot" "-t"
-			waitlonger=60
+			write_uboot
 		fi
 		x=$((x+1))
 	done
