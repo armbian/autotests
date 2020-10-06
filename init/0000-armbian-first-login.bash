@@ -12,25 +12,24 @@ if [[ $? -eq 0 ]]; then
 ssh-keygen -qf "$HOME/.ssh/known_hosts" -R "${USER_HOST}" > /dev/null 2>&1
 sshpass -p 1234 ssh -o "StrictHostKeyChecking=accept-new" ${USER_ROOT}@${USER_HOST} "\x03" &>/dev/null
 
+#echo $?
 # since 20.08
-if [[ $? -eq 1 ]]; then
+if [[ $? -eq 127 ]]; then
 display_alert "Conduct first login steps" "root/${PASS_ROOT} and ${USER_NORMAL}/${PASS_NORMAL}" "info"
 MAKE_USER=$(expect -c "
         spawn sshpass -p 1234 ssh -o "StrictHostKeyChecking=accept-new" ${USER_ROOT}@${USER_HOST}
-        set timeout 10
-        expect \"New root password:\"
+        set timeout 120
+        expect \"New root password: \"
 	send \"${PASS_ROOT}\r\"
-        expect \"Repeat password:\"
+        expect \"Repeat password: \"
         send \"${PASS_ROOT}\r\"
-        expect \"from your location [Y/n]\"
-        send \"y\"
-	expect \"(eg. your forename):\"
+	expect \"*your forename): \"
 	send \"${USER_NORMAL}\r\"
         expect \"Create password:\"
         send \"${PASS_NORMAL}\r\"
         expect \"Repeat password:\"
         send \"${PASS_NORMAL}\r\"
-        expect \"(eg. John Doe):\"
+        expect \"Please provide your real name (eg. John Doe): \"
         send \"${NAME_NORMAL}\r\"
         expect eof
         ")
@@ -40,7 +39,7 @@ MAKE_USER=$(expect -c "
         echo "${MAKE_USER}" >> ${SRC}/logs/${USER_HOST}.log
 fi
 
-# before 20.08 
+# before 20.08
 if [[ $? -eq 1 ]]; then
 	# clean keys
 	# pass user creation to expect
@@ -80,6 +79,12 @@ if [[ $? -eq 1 ]]; then
 	echo "${MAKE_USER}" >> ${SRC}/logs/${USER_HOST}.txt
 	echo "${MAKE_USER}" >> ${SRC}/logs/${USER_HOST}.log
 fi
+
+# adjust repository
+remoterelease=$(remote_exec "lsb_release -cs" "")
+repository="deb http://$LOCALREPO ${remoterelease} main ${remoterelease}-utils ${remoterelease}-desktop"
+#display_alert "Correct repository: ${repository}"
+remote_exec "echo ${repository} > /etc/apt/sources.list.d/armbian.list" "-t"
 
 if [[ $PREPAREONLY != yes ]]; then
 display_alert "Run apt fixes just to make sure" "apt-get -f install"

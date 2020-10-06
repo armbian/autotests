@@ -23,6 +23,7 @@ mkdir -p userconfig logs reports
 
 # create sample configuration if id does not exits
 
+LOCALREPO="apt.armbian.com"
 
 if [[ ! -f userconfig/configuration.sh ]]; then
 
@@ -31,6 +32,9 @@ if [[ ! -f userconfig/configuration.sh ]]; then
 	exit
 
 fi
+
+# load user configuration
+source userconfig/configuration.sh
 
 # Script parameters handling
 while [[ $1 == *=* ]]; do
@@ -66,9 +70,6 @@ REPORT_HTML=$(date "+%d. %b %Y %H:%M UTC")
 myfambran=()
 # store pids in here
 mytestids=()
-
-# load user configuration
-source userconfig/configuration.sh
 
 # load libraries
 source lib/functions.sh
@@ -115,6 +116,7 @@ echo "PARALLEL=$PARALLEL"
 echo "FRESH=$FRESH"
 echo "BSPSWITCH=$BSPSWITCH"
 echo "EMULATED=$EMULATED"
+echo "LOCALREPO=$LOCALREPO"
 
 echo ""
 
@@ -212,11 +214,11 @@ for USER_HOST in "${hostarray[@]}"; do
 		fi
 
 		# switch to stable build, current branch from repository if not already there
-		if [[ -n "$BOARD_IMAGE_TYPE" && "$BOARD_IMAGE_TYPE" != stable && $BOARD_BRANCH != current && $FRESH == yes ]]; then
-
-			display_alert "Switch to stable builds, current branch" "$(date  +%R:%S)" "wrn"
+		#if [[ -n "$BOARD_IMAGE_TYPE" && "$BOARD_IMAGE_TYPE" != stable && $BOARD_BRANCH != current && $FRESH == yes ]]; then
+		if [[ -n "$BOARD_IMAGE_TYPE" && $FRESH == yes ]]; then
+			display_alert "Switch to stable builds" "$(date  +%R:%S)" "wrn"
 			remote_exec "apt update; apt -y -qq install armbian-config; \
-			LANG=C armbian-config main=System selection=Stable branch=current" "-t" &>/dev/null
+			LANG=C armbian-config main=System selection=Stable branch=$BOARD_BRANCH" "-t" &>/dev/null
 			write_uboot
 		fi
 		x=$((x+1))
@@ -290,8 +292,8 @@ echo "This whole procedure took "$((($(date +%s) - $START)/60))" minutes".
 if [[ -n $UPLOAD_SERVER && -n $UPLOAD_LOCATION ]]; then
 
 	# upload report
-	rsync -arP --delete ${SRC}/reports/${REPORT}.html -e 'ssh -p 22' ${UPLOAD_SERVER}:${UPLOAD_LOCATION}
+	rsync -arP --delete ${SRC}/reports/${REPORT}.html -e 'ssh -p 22' ${UPLOAD_SERVER}:${UPLOAD_LOCATION}"autotest.html"
 	# set link to latest
-	ssh ${UPLOAD_SERVER} "cd ${UPLOAD_LOCATION} ; ln -sf ${REPORT}.html latest.html"
+	#ssh ${UPLOAD_SERVER} "cd ${UPLOAD_LOCATION} ; ln -sf ${REPORT}.html latest.html"
 
 fi

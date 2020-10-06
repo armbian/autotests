@@ -198,6 +198,7 @@ while [ $r -le ${PASSES} ]
 		if [[ $? -ne 0 ]]; then
 
 			display_alert "Can't connect. SSH on $USER_HOST is closed" "$(date  +%R:%S)" "err"
+			BODY_HTML="<tr><td style=\"background-color:#FF0000; color: #fff\" align=center>&nbsp;$((x+1))&nbsp;</td><td style=\"background-color:#FF0000; color: #fff\" colspan=$((COLOUMB+2))>$(mask_ip "$USER_HOST") failed</td></tr>"
 			break
 
 		else
