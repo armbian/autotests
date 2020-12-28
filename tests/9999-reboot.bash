@@ -8,5 +8,5 @@ TEST_SKIP="true"
 display_alert "$(basename $BASH_SOURCE)" "$(date  +%R:%S)" "info"
 display_alert "Rebooting in 3 seconds" "${BOARD_NAME}" "info"
 sleep 3
-remote_exec "reboot" &>/dev/null
-sleep 20
+remote_exec "reboot"
+sleep 10

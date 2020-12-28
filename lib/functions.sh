@@ -228,6 +228,7 @@ while [ $r -le ${PASSES} ]
 			for u in "${array[@]}"
 			do
 				unset TEST_OUTPUT
+				get_board_data
 				DATA_ALIGN="center"
 				. $u
 				[[ $TEST_SKIP != "true" ]] && BODY_HTML+="\t<td align=$DATA_ALIGN>$TEST_OUTPUT</td>"

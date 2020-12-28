@@ -215,7 +215,8 @@ for USER_HOST in "${hostarray[@]}"; do
 
 		# switch to stable build, current branch from repository if not already there
 		#if [[ -n "$BOARD_IMAGE_TYPE" && "$BOARD_IMAGE_TYPE" != stable && $BOARD_BRANCH != current && $FRESH == yes ]]; then
-		if [[ -n "$BOARD_IMAGE_TYPE" && $FRESH == yes ]]; then
+
+		if [[ -n "$BOARD_IMAGE_TYPE" && $FRESH == "stable" ]]; then
 			display_alert "Switch to stable builds" "$(date  +%R:%S)" "wrn"
 			remote_exec "apt update; apt -y -qq install armbian-config; \
 			LANG=C armbian-config main=System selection=Stable branch=$BOARD_BRANCH" "-t" &>/dev/null
@@ -229,7 +230,7 @@ done
 # show diff to previous build
 display_alert "Diff to previous build" "added or removed" "info"
 cat ${SRC}/reports/data.out | cut -d$'"' -f 4 | sed 's/.*/"&"/' | sort | uniq | awk -F"\"" '{print $2}' > ${SRC}/reports/data.out.txt
-cat ${SRC}/reports/data.in ${SRC}/reports/data.out | cut -d$'"' -f 4 | sed 's/.*/"&"/' | sort | uniq | awk -F"\"" '{print $2}' | diff ${SRC}/reports/data.out.txt - | grep ">"
+[[ -f ${SRC}/reports/data.in ]] && cat ${SRC}/reports/data.in ${SRC}/reports/data.out | cut -d$'"' -f 4 | sed 's/.*/"&"/' | sort | uniq | awk -F"\"" '{print $2}' | diff ${SRC}/reports/data.out.txt - | grep ">"
 
 #cp ${SRC}/reports/data.out ${SRC}/reports/data.in
 
@@ -292,8 +293,8 @@ echo "This whole procedure took "$((($(date +%s) - $START)/60))" minutes".
 if [[ -n $UPLOAD_SERVER && -n $UPLOAD_LOCATION ]]; then
 
 	# upload report
-	rsync -arP --delete ${SRC}/reports/${REPORT}.html -e 'ssh -p 22' ${UPLOAD_SERVER}:${UPLOAD_LOCATION}"autotest.html"
+	rsync -arP --delete ${SRC}/reports/${REPORT}.html -e 'ssh -p 22' ${UPLOAD_SERVER}:${UPLOAD_LOCATION}"${REPORT}.html"
 	# set link to latest
-	#ssh ${UPLOAD_SERVER} "cd ${UPLOAD_LOCATION} ; ln -sf ${REPORT}.html latest.html"
+	ssh ${UPLOAD_SERVER} "cd ${UPLOAD_LOCATION} ; ln -sf ${REPORT}.html latest.html"
 
 fi
