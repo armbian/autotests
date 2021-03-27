@@ -31,8 +31,10 @@ MAKE_USER=$(expect -c "
         send \"${PASS_NORMAL}\r\"
         expect \"Repeat password:\"
         send \"${PASS_NORMAL}\r\"
-        expect \"Please provide your real name (eg. John Doe): \"
+        expect \"Please provide your real name: \"
         send \"${NAME_NORMAL}\r\"
+        expect \"Set user language based on your location? \[Y/n\] \"
+        send \"y\r\"
         expect eof
         ")
         # Disable user creation: send \"\x03\"
