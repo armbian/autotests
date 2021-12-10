@@ -10,7 +10,7 @@
 #
 
 
-sudo apt install -y -qq jq expect sshpass nmap iperf3 &>/dev/null
+sudo apt install -y -qq jq expect sshpass nmap iperf3 netcat &>/dev/null
 
 
 #
