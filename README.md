@@ -25,6 +25,8 @@ Download the latest armbian image for your board(s). We recommend to use .torren
 
 Put the SDcard into your device, power it up and let it sit for 1-2 minutes, to do the standard initial setup.
 
+Note: if you are connected with Wi-Fi only, remember to only set one network with NetworkManager. Otherwise the test will delete all saved networks. 
+
 ## Prepare your system
 
 1. Go to a folder where you want to store it. The following command will create a folder called 'autotests'. Clone the sources from Github and open the folder autotests:
