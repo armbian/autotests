@@ -2,7 +2,7 @@
 source $SRC/lib/functions.sh
 
 TEST_TITLE="memory"
-TEST_ICON="<img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/memory.png>"
+TEST_ICON="<img width=20 src=${GITHUB_SOURCE}armbian/autotests/raw/master/icons/memory.png>"
 [[ $DRY_RUN == true ]] && return 0
 
 display_alert "$(basename $BASH_SOURCE)" "$(date  +%R:%S)" "info"
@@ -37,14 +37,14 @@ if [[ "$r" -le "${SBCBENCHPASS}" ]]; then
 			display_alert "Tiny memory bench" "Copy: $MEMCPY - Set: $MEMSET MB/s" "info"
 		else
 			display_alert "SBC bench not finished in time" "" "err"
-			TEST_OUTPUT="<img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/error.png>"
+			TEST_OUTPUT="<img width=20 src=${GITHUB_SOURCE}armbian/autotests/raw/master/icons/error.png>"
 			MEMCPY=$TEST_OUTPUT
 			MEMSET=$TEST_OUTPUT
 			unset GETTEMP THROTTLING AES128 AES256 SBCBENCHURL
 			display_alert "Tiny memory bench" "No data" "wrn"
 		fi
 else
-	TEST_OUTPUT="<img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/na.png>"
+	TEST_OUTPUT="<img width=20 src=${GITHUB_SOURCE}armbian/autotests/raw/master/icons/na.png>"
 fi
 
 

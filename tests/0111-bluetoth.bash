@@ -2,7 +2,7 @@
 source $SRC/lib/functions.sh
 
 TEST_TITLE="BT"
-TEST_ICON="<img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/bluetooth.png>"
+TEST_ICON="<img width=20 src=${GITHUB_SOURCE}armbian/autotests/raw/master/icons/bluetooth.png>"
 [[ $DRY_RUN == true ]] && return 0
 
 unset resoult
@@ -17,7 +17,7 @@ fi
 
 if [[ -n $resoult ]]; then 
 	display_alert "Bluetooth ping to your test device was succesfull" "$resoult" "info"
-	TEST_OUTPUT="<img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/checked.png>"
+	TEST_OUTPUT="<img width=20 src=${GITHUB_SOURCE}armbian/autotests/raw/master/icons/checked.png>"
 	else
-	TEST_OUTPUT="<img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/na.png>"
+	TEST_OUTPUT="<img width=20 src=${GITHUB_SOURCE}armbian/autotests/raw/master/icons/na.png>"
 fi

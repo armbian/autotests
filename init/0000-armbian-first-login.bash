@@ -55,10 +55,12 @@ display_alert "Updating packages" "apt update only"
 remote_exec "chsh -s /bin/bash; apt -y purge armbian-config; apt update" "-t" "10m" &>/dev/null
 display_alert "Installing stress, armbian-config, bluez-tools, iozone3 and sbc-bench" "test dependencies"
 remote_exec "apt -qq -y install jq stress armbian-config bluez bluez-tools iozone3" "-t" "10m" &>/dev/null
-remote_exec "wget -q -O /usr/local/bin/sbc-bench https://raw.githubusercontent.com/ThomasKaiser/sbc-bench/master/sbc-bench.sh; chmod +x /usr/local/bin/sbc-bench" "-t" "10m" &>/dev/null
+remote_exec "wget -q -O /usr/local/bin/sbc-bench ${GITHUB_SOURCE}ThomasKaiser/sbc-bench/raw/master/sbc-bench.sh; chmod +x /usr/local/bin/sbc-bench" "-t" "10m" &>/dev/null
 
 # we will not wait for ideal load since load itself is more important than numbers
 remote_exec "sed -i \"s/\tCheckLoad/\t#CheckLoad/\" /usr/local/bin/sbc-bench"
+# also patch GitHub urls
+remote_exec "sed -i \"s|https://github.com/|${GITHUB_SOURCE}|g\" /usr/local/bin/sbc-bench"
 else
 remote_exec "dpkg --configure -a --force-confold" "-t" "10m" &>/dev/null
 fi
