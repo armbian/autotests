@@ -26,7 +26,7 @@ do
 	TEST_OUTPUT+="<small>$(echo $device | cut -d \( -f2 | cut -d \) -f1)<br></small> ${speed_from}${speed_to}<br>"
 
 done
-[[ ${#array[@]} -eq 0 ]] && TEST_OUTPUT="<img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/na.png>"
+[[ ${#array[@]} -eq 0 ]] && TEST_OUTPUT="<img width=20 src=${GITHUB_SOURCE}armbian/autotests/raw/master/icons/na.png>"
 sleep 1
 remote_exec "pkill -F /var/run/iperf3"
 rm -f $SRC/logs/armbian-iperf

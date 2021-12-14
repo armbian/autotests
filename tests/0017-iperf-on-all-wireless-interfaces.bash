@@ -13,5 +13,5 @@ readarray -t array < <(get_device "^[wr].*" "ip")
 if [[ "$FREQ5GHZ" -gt 1 ]]; then
 source $SRC/tests/include/iperf-on-all-interfaces.include
 else
-TEST_OUTPUT="<img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/na.png>"
+TEST_OUTPUT="<img width=20 src=${GITHUB_SOURCE}armbian/autotests/raw/master/icons/na.png>"
 fi

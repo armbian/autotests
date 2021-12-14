@@ -10,7 +10,7 @@
 #
 
 
-sudo apt install -y -qq jq expect sshpass nmap iperf3 &>/dev/null
+sudo apt install -y -qq jq expect sshpass nmap iperf3 netcat curl bc &>/dev/null
 
 
 #
@@ -120,6 +120,30 @@ echo "LOCALREPO=$LOCALREPO"
 
 echo ""
 
+#
+# Handle expert options (hidden to the user)
+#
+
+case $REGIONAL_MIRROR in
+	china)
+		[[ -z $GITHUB_MIRROR ]] && GITHUB_MIRROR=fastgit
+		;;
+	*)
+		;;
+esac
+
+case $GITHUB_MIRROR in
+	fastgit)
+		GITHUB_SOURCE='https://hub.fastgit.org/'
+		;;
+	cnpmjs)
+		GITHUB_SOURCE='https://github.com.cnpmjs.org/'
+		;;
+	*)
+		GITHUB_SOURCE='https://github.com/'
+		;;
+esac
+
 # cycle test cases and make a header row
 #
 # when DRY_RUN is set we cycle over test to basic information about tests, but do not run them
@@ -163,7 +187,7 @@ HEAD_HTML="<html>\n<head>\n<style type=\"text/css\">
 \n</style>\n<meta charset=\"UTF-8\">\n</head>\n<body><h1>Report ${REPORT_HTML}</h1>\
 \n<table class=\"TFtable\" cellspacing=0 width=100% border=0>
 \n<tr><td align=right rowspan=2>\
-<img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/hashtag.png>\
+<img width=20 src=${GITHUB_SOURCE}armbian/autotests/raw/master/icons/hashtag.png>\
 </td><td align=center colspan=2>Board</td>\n"
 
 HEADER_HTML="${HEAD_HTML}${HEADER_HTML}</tr>\

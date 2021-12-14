@@ -2,7 +2,7 @@
 source $SRC/lib/functions.sh
 
 TEST_TITLE="2.4Ghz"
-TEST_ICON="<img width=20 src=https://raw.githubusercontent.com/armbian/autotests/master/icons/wifi.png>"
+TEST_ICON="<img width=20 src=${GITHUB_SOURCE}armbian/autotests/raw/master/icons/wifi.png>"
 [[ $DRY_RUN == true ]] && return 0
 
 display_alert "$(basename $BASH_SOURCE)" "$(date  +%R:%S)" "info"
